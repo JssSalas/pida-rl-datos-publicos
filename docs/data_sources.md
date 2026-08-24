@@ -33,3 +33,17 @@
 - **Formato:** Tabulado interactivo (exportable a CSV)
 - **Fecha de descarga:** [completar]
 - **Uso en el proyecto:** validar tasas de eventos adversos simulados
+
+## Decisión metodológica: clasificación de diabetes
+
+Se optó por clasificar el estado de diabetes únicamente mediante **diagnóstico 
+previo autorreportado** (variable `a0301` de la base Adultos_ENSANUT_2022), 
+consistente con la metodología de reporte oficial del INSP para prevalencia por 
+diagnóstico médico.
+
+**Limitación documentada:** no se incluye la clasificación de diabetes no 
+diagnosticada (que requeriría valores bioquímicos de glucosa en ayuno), debido a
+ que el archivo de laboratorio disponible (`Muestras_Sangre_ENSANUT_2022.sav`) 
+ corresponde a pruebas de papel filtro (hemoglobina), no a química sanguínea. 
+ Esta limitación se declara explícitamente en el reporte de evaluación del 
+ proyecto.
