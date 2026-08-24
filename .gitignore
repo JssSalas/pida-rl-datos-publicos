@@ -1,0 +1,23 @@
+# Datos fuente, datos intermedios y resultados pesados
+data/raw/
+data/processed/
+data/results/
+*.csv
+*.xlsx
+*.xls
+*.sav
+*.dta
+*.parquet
+
+# Credenciales y secretos
+*.json
+.env
+.streamlit/secrets.toml
+
+# Archivos de Python y Jupyter
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Sistema operativo
+.DS_Store
