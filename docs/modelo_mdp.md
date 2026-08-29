@@ -69,3 +69,11 @@ El entorno fue validado mediante `check_env()` y posteriormente se ejecutó un e
 La política aleatoria selecciona cualquier acción válida del espacio discreto. La política basada en reglas asigna acción 2 a perfiles de alto riesgo, acción 1 a perfiles de riesgo medio y acción 0 a perfiles de bajo riesgo. Ambas políticas se utilizarán como líneas base para evaluar Q-learning, DQN y PPO.
 
 Las métricas iniciales son recompensa acumulada, número de contactos, eventos adversos simulados y excesos de capacidad.
+
+## Validación funcional y políticas base
+
+El entorno fue validado mediante `check_env()` y posteriormente se ejecutó un episodio completo con acciones aleatorias. La evaluación de referencia utiliza tres semillas reproducibles y compara una política aleatoria contra una política basada en reglas de riesgo.
+
+La política aleatoria selecciona cualquier acción válida del espacio discreto. La política basada en reglas asigna acción 2 a perfiles de alto riesgo, acción 1 a perfiles de riesgo medio y acción 0 a perfiles de bajo riesgo. Ambas políticas se utilizarán como líneas base para evaluar Q-learning, DQN y PPO.
+
+Las métricas iniciales son recompensa acumulada, número de contactos, eventos adversos simulados y excesos de capacidad.
