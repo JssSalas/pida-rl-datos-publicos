@@ -44,20 +44,40 @@ class DiabetesFollowUpEnv(gym.Env):
         info = {"mes": self.mes_actual, "n_perfiles": self.n_perfiles}
         return obs, info
 
+# Anterior
+#    def _get_obs(self, idx):
+#        row = self.cohorte.iloc[idx]
+#        riesgo_map = {"bajo": 0.0, "medio": 0.5, "alto": 1.0}
+#        obs = np.array([
+#            row["edad"] / 100.0,
+#            row["sexo"],
+#            min(row["anios_con_diabetes"] / 50.0, 1.0),
+#            min(row["num_complicaciones"] / 9.0, 1.0),
+#            min(row["num_comorbilidades"] / 2.0, 1.0),
+#            riesgo_map.get(row["categoria_riesgo"], 0.0),
+#            min(row["meses_sin_contacto"] / 12.0, 1.0),
+#            self.mes_actual / self.horizonte,
+#        ], dtype=np.float32)
+#        return obs 
+
+# Nuevo el np.clip() funciona como protección adicional, 
+# no como sustituto de una limpieza correcta.
+
     def _get_obs(self, idx):
-        row = self.cohorte.iloc[idx]
-        riesgo_map = {"bajo": 0.0, "medio": 0.5, "alto": 1.0}
-        obs = np.array([
-            row["edad"] / 100.0,
-            row["sexo"],
-            min(row["anios_con_diabetes"] / 50.0, 1.0),
-            min(row["num_complicaciones"] / 9.0, 1.0),
-            min(row["num_comorbilidades"] / 2.0, 1.0),
-            riesgo_map.get(row["categoria_riesgo"], 0.0),
-            min(row["meses_sin_contacto"] / 12.0, 1.0),
-            self.mes_actual / self.horizonte,
-        ], dtype=np.float32)
-        return obs
+      row = self.cohorte.iloc[idx]
+      riesgo_map = {"bajo": 0.0, "medio": 0.5, "alto": 1.0}
+      sexo = float(row["sexo"])
+      obs = np.array([
+          np.clip(float(row["edad"]) / 100.0, 0.0, 1.0),
+          np.clip(sexo, 0.0, 1.0),
+          np.clip(float(row["anios_con_diabetes"]) / 50.0, 0.0, 1.0),
+          np.clip(float(row["num_complicaciones"]) / 9.0, 0.0, 1.0),
+          np.clip(float(row["num_comorbilidades"]) / 2.0, 0.0, 1.0),
+          riesgo_map.get(row["categoria_riesgo"], 0.0),
+          np.clip(float(row["meses_sin_contacto"]) / 12.0, 0.0, 1.0),
+          np.clip(float(self.mes_actual) / self.horizonte, 0.0, 1.0)
+      ], dtype=np.float32)
+      return obs
 
     def step(self, action):
         costo = self.costo_accion[action]
