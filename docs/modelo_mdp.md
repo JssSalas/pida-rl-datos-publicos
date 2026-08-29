@@ -61,3 +61,19 @@ Episodio de longitud fija: 12 meses (un año simulado). No hay terminación anti
 ## Corrección de codificación de sexo
 
 Durante la validación con `check_env()` se identificó que la variable `sexo` conservaba la codificación original de ENSANUT, donde el valor 2 representaba una categoría válida. Debido a que el espacio de observación del entorno utiliza valores normalizados entre 0 y 1, la variable se recodificó como una variable binaria: 1 original -> 0 y 2 original -> 1. Se verificó que las observaciones generadas por `reset()` y `step()` cumplen los límites declarados en `observation_space`.
+
+## Calibración final de categoría de riesgo
+
+Se recalibró el umbral de riesgo usando percentiles de la distribución empírica
+del score (complicaciones×2 + comorbilidades), en lugar de un corte fijo
+arbitrario. Los percentiles 50 y 80 de la cohorte (n=1,544) definen los cortes
+medio/alto.
+
+Distribución resultante:
+- Bajo riesgo: 600 personas (38.9%)
+- Medio riesgo: 552 personas (35.8%)
+- Alto riesgo: 392 personas (25.4%)
+
+Esta distribución es consistente con escenarios reales de capacidad operativa
+limitada, donde aproximadamente una cuarta parte de la cohorte requiere
+seguimiento prioritario.
