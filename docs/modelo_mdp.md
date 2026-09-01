@@ -77,3 +77,19 @@ El entorno fue validado mediante `check_env()` y posteriormente se ejecutó un e
 La política aleatoria selecciona cualquier acción válida del espacio discreto. La política basada en reglas asigna acción 2 a perfiles de alto riesgo, acción 1 a perfiles de riesgo medio y acción 0 a perfiles de bajo riesgo. Ambas políticas se utilizarán como líneas base para evaluar Q-learning, DQN y PPO.
 
 Las métricas iniciales son recompensa acumulada, número de contactos, eventos adversos simulados y excesos de capacidad.
+
+## Calibración final de categoría de riesgo
+
+Se recalibró el umbral de riesgo usando percentiles de la distribución empírica
+del score (complicaciones×2 + comorbilidades), en lugar de un corte fijo
+arbitrario. Los percentiles 50 y 80 de la cohorte (n=1,544) definen los cortes
+medio/alto.
+
+Distribución resultante:
+- Bajo riesgo: 600 personas (38.9%)
+- Medio riesgo: 552 personas (35.8%)
+- Alto riesgo: 392 personas (25.4%)
+
+Esta distribución es consistente con escenarios reales de capacidad operativa
+limitada, donde aproximadamente una cuarta parte de la cohorte requiere
+seguimiento prioritario.
