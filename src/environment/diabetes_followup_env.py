@@ -58,9 +58,9 @@ class DiabetesFollowUpEnv(gym.Env):
 #            min(row["meses_sin_contacto"] / 12.0, 1.0),
 #            self.mes_actual / self.horizonte,
 #        ], dtype=np.float32)
-#        return obs 
+#        return obs
 
-# Nuevo el np.clip() funciona como protección adicional, 
+# Nuevo el np.clip() funciona como protección adicional,
 # no como sustituto de una limpieza correcta.
 
     def _get_obs(self, idx):
