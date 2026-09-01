@@ -12,7 +12,6 @@ def evaluar_politica(env, politica, semillas):
         eventos_adversos = 0
         excesos_capacidad = 0
         contactos = 0
-        recursos_usados_mes=0
 
         while True:
             accion = politica(env)
@@ -21,10 +20,8 @@ def evaluar_politica(env, politica, semillas):
             recompensa_total += float(reward)
             pasos += 1
 
-#Corrección contador
             if accion > 0:
-                contactos += int(info["accion_aceptada"] and accion > 0)
-#Fin de corrección contador
+                contactos += 1
 
             eventos_adversos += int(info["evento_adverso"])
             excesos_capacidad += int(info["excede_capacidad"])
@@ -38,8 +35,7 @@ def evaluar_politica(env, politica, semillas):
             "pasos": pasos,
             "contactos": contactos,
             "eventos_adversos": eventos_adversos,
-            "excesos_capacidad": excesos_capacidad,
-            "recursos_usados_mes": recursos_usados_mes
+            "excesos_capacidad": excesos_capacidad
         })
 
     return resultados

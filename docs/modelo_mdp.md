@@ -61,3 +61,11 @@ Episodio de longitud fija: 12 meses (un año simulado). No hay terminación anti
 ## Corrección de codificación de sexo
 
 Durante la validación con `check_env()` se identificó que la variable `sexo` conservaba la codificación original de ENSANUT, donde el valor 2 representaba una categoría válida. Debido a que el espacio de observación del entorno utiliza valores normalizados entre 0 y 1, la variable se recodificó como una variable binaria: 1 original -> 0 y 2 original -> 1. Se verificó que las observaciones generadas por `reset()` y `step()` cumplen los límites declarados en `observation_space`.
+
+## Validación funcional y políticas base
+
+El entorno fue validado mediante `check_env()` y posteriormente se ejecutó un episodio completo con acciones aleatorias. La evaluación de referencia utiliza tres semillas reproducibles y compara una política aleatoria contra una política basada en reglas de riesgo.
+
+La política aleatoria selecciona cualquier acción válida del espacio discreto. La política basada en reglas asigna acción 2 a perfiles de alto riesgo, acción 1 a perfiles de riesgo medio y acción 0 a perfiles de bajo riesgo. Ambas políticas se utilizarán como líneas base para evaluar Q-learning, DQN y PPO.
+
+Las métricas iniciales son recompensa acumulada, número de contactos, eventos adversos simulados y excesos de capacidad.
