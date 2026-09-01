@@ -57,3 +57,7 @@ Donde:
 ## Horizonte y criterio de terminación
 
 Episodio de longitud fija: 12 meses (un año simulado). No hay terminación anticipada, salvo un límite máximo de eventos adversos acumulados (opcional, a definir en la etapa de evaluación).
+
+## Corrección de codificación de sexo
+
+Durante la validación con `check_env()` se identificó que la variable `sexo` conservaba la codificación original de ENSANUT, donde el valor 2 representaba una categoría válida. Debido a que el espacio de observación del entorno utiliza valores normalizados entre 0 y 1, la variable se recodificó como una variable binaria: 1 original -> 0 y 2 original -> 1. Se verificó que las observaciones generadas por `reset()` y `step()` cumplen los límites declarados en `observation_space`.
