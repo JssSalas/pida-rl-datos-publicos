@@ -80,6 +80,7 @@ class DiabetesFollowUpEnv(gym.Env):
       return obs
 
     def step(self, action):
+      # * Se modifican las recompensas iniciales ya que en una primera aproximación se observa que los algoritmos aprenden a sólo señalar acciones para los pacientes de riesgo alto y dejar fuera riesgo medio y bajo 
         costo = self.costo_accion[action]
         excede_capacidad = (self.recursos_usados_mes + costo) > self.presupuesto_mensual
 
@@ -94,20 +95,51 @@ class DiabetesFollowUpEnv(gym.Env):
         evento_adverso = self._rng.random() < prob_evento
 
         reward = 0.0
-        if action >= 2 and nivel_riesgo == 2:
-            reward += 2.0
+        # * Beneficio por atención según nivel de riesgo
+        if accion_aceptada and action > 0:
+          if nivel_riesgo == 2:
+            reward += 3.0
+          elif nivel_riesgo == 1:
+            reward += 1.0
+          else:
+            reward += 0.10
+
+        # * Penalización por no atender perfiles prioritarios
+        if not accion_aceptada or action == 0:
+          if nivel_riesgo == 2:
+            reward -= 1.5
+          elif nivel_riesgo == 1:
+            reward -= 0.5
+
+        # * Penalización por evento adverso
         if evento_adverso:
-            reward -= 5.0
+          reward -= 5.0
+
+        # * Penalización por exceder capacidad
         if excede_capacidad:
-            reward -= 3.0
-        else:
-            self.recursos_usados_mes += costo
+          reward -= 3.0
+        
+        #reward = 0.0
+        #if action >= 2 and nivel_riesgo == 2:
+        #    reward += 2.0
+        #if evento_adverso:
+        #    reward -= 5.0
+        #if excede_capacidad:
+        #    reward -= 3.0
+        #else:
+        #    self.recursos_usados_mes += costo
 
-        if action == 0:
-            self.cohorte.loc[self.idx_actual, "meses_sin_contacto"] += 1
-        else:
-            self.cohorte.loc[self.idx_actual, "meses_sin_contacto"] = 0
+        #if action == 0:
+        #    self.cohorte.loc[self.idx_actual, "meses_sin_contacto"] += 1
+        #else:
+        #    self.cohorte.loc[self.idx_actual, "meses_sin_contacto"] = 0
 
+        meses_sin_contacto = float( row["meses_sin_contacto"])
+        
+        incremento_por_abandono = min(0.005 * meses_sin_contacto, 0.05)
+        
+        prob_evento_base = (0.02 + 0.03 * nivel_riesgo + incremento_por_abandono)
+        
         self.idx_actual += 1
         terminated = False
         truncated = False
