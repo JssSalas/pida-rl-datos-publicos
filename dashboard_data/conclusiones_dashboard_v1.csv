@@ -1,0 +1,7 @@
+﻿tipo,contenido
+resultado_principal,"Bajo el protocolo de evaluación del simulador, reglas_capacidad es la candidata operativa de referencia: ocupa el primer lugar técnico, mantiene cobertura de alto riesgo y respeta la capacidad promedio. Esta conclusión no equivale a validación clínica ni a autorización de despliegue."
+rendimiento,reglas_capacidad: puntaje técnico=0.894; recompensa media=-13521.000; cobertura de alto riesgo=11.765%.
+capacidad,reglas_capacidad: excesos medios de capacidad=0.000; respeta capacidad en promedio=True.
+equidad_por_riesgo,reglas_capacidad: cobertura bajo/medio/alto=0.993%/8.139%/11.765%; brecha alto menos bajo=10.772 puntos porcentuales.
+limitacion,La auditoría disponible es por nivel de riesgo. No se calcularon resultados por sexo o edad porque las trazas de evaluación agregadas no contienen atributos demográficos ni identificador individual.
+siguiente_validacion,"Antes de uso institucional se requieren datos autorizados, validación clínica prospectiva, evaluación demográfica por subgrupos, revisión de gobernanza, trazabilidad y supervisión humana."

@@ -1,0 +1,21 @@
+{
+  "version": "1.0",
+  "generated_at_utc": "2026-09-07T23:42:49.197928+00:00",
+  "selected_policy": "reglas_capacidad",
+  "recommendation_status": "candidata_operativa_en_simulacion",
+  "policies": [
+    "reglas_capacidad",
+    "ppo_v1",
+    "q_learning_v1",
+    "dqn_v1",
+    "reglas_riesgo",
+    "aleatoria"
+  ],
+  "scope_note": "Resultados de simulación con datos públicos y supuestos explícitos. No usar para decisiones clínicas reales.",
+  "data_files": {
+    "decision_table": "tabla_decision_final_v1.csv",
+    "risk_coverage": "cobertura_por_riesgo_dashboard_v1.csv",
+    "high_risk_stability": "alto_riesgo_por_semilla_dashboard_v1.csv",
+    "conclusions": "conclusiones_dashboard_v1.csv"
+  }
+}

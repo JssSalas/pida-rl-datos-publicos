@@ -1,0 +1,7 @@
+﻿ranking_tecnico,politica,clasificacion,puntaje_tecnico,recompensa_media,cobertura_alto_riesgo_media,bajo,medio,alto,brecha_alto_menos_bajo_pp,eventos_adversos_medios,recursos_usados_medios,excesos_capacidad_medios,respeta_capacidad_en_promedio,candidata_operativa
+1,reglas_capacidad,referencia_no_aprendida,0.8940791031814951,-13521.0,11.765,0.993,8.139,11.765,10.772,1154.333,3696.0,0.0,True,True
+2,ppo_v1,agente_aprendido_evaluable,0.6145210884916836,-14984.333,9.477,6.477,3.493,9.477,3.0,1171.667,3672.0,90.0,False,False
+3,q_learning_v1,agente_aprendido_evaluable,0.5417915332477915,-16118.333,9.6,8.463,5.193,9.6,1.137,1175.667,3696.0,478.0,False,False
+4,dqn_v1,agente_aprendido_evaluable,0.5364750878525597,-15014.833,8.497,7.146,4.075,8.497,1.351,1178.667,3645.0,0.0,True,False
+5,reglas_riesgo,referencia_no_aprendida,0.4440791031814951,-52178.667,11.765,1.094,8.068,11.765,10.671,1154.333,3696.0,12884.333,False,False
+6,aleatoria,referencia_no_aprendida,0.3960400616183208,-50511.333,10.939,9.514,9.324,10.939,1.425,1153.333,3696.0,12012.0,False,False
