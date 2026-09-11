@@ -159,14 +159,14 @@ Las conclusiones deben interpretarse como resultados de un entorno simulado y no
 
 - [x] Definición preliminar del problema.
 - [x] Identificación inicial de fuentes públicas.
-- [ ] Descarga y diccionario de datos.
-- [ ] Análisis exploratorio.
-- [ ] Construcción del entorno Gymnasium.
-- [ ] Implementación de políticas base.
-- [ ] Entrenamiento de agentes RL.
-- [ ] Evaluación y análisis de sensibilidad.
-- [ ] Dashboard Streamlit.
-- [ ] Despliegue y documentación final.
+- [x] Descarga y diccionario de datos.
+- [x] Análisis exploratorio.
+- [x] Construcción del entorno Gymnasium.
+- [x] Implementación de políticas base.
+- [x] Entrenamiento de agentes RL.
+- [x] Evaluación y análisis de sensibilidad.
+- [x] Dashboard Streamlit.
+- [x] Despliegue y documentación final.
 
 ## Autor
 
