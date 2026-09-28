@@ -16,15 +16,7 @@ Este documento registra cambios funcionales, evidencia de validación y procedim
 
 ### V2.0.0 — Capacidad operativa estricta
 
-**Estado:** En desarrollo.
-
-**Archivos modificados o añadidos:**
-
-- `src/config.py`
-- `src/environment/diabetes_followup_env.py`
-- `tests/test_resource_constraint.py`
-- `CHANGELOG.md`
-- `docs/CONTROL_CAMBIOS.md`
+**Commit:** `a3f4a4b45a6ddbba81c51d1fe582ecbc256dfcf4`.
 
 **Cambios funcionales:**
 
@@ -39,12 +31,35 @@ Este documento registra cambios funcionales, evidencia de validación y procedim
 
 - La observación cambia de 8 a 9 variables; los modelos previamente entrenados deben reentrenarse.
 - Los costos cambian de `0, 1, 2, 3` a `0, 1, 3, 5`.
-- La evaluación debe usar `accion_ejecutada`, no solamente la acción propuesta.
+
+**Validación:** cinco pruebas automáticas aprobadas.
+
+### V2.1.0 — Evaluación y reportes trazables
+
+**Estado:** En desarrollo.
+
+**Archivos modificados o añadidos:**
+
+- `src/evaluation/evaluate_policies.py`
+- `src/evaluation/reporting.py`
+- `tests/test_evaluation_reporting.py`
+- `CHANGELOG.md`
+- `docs/CONTROL_CAMBIOS.md`
+
+**Cambios funcionales:**
+
+- Registro por algoritmo, semilla, paciente, mes y paso.
+- Conservación separada de acción propuesta y acción ejecutada.
+- Resumen por episodio de recompensa, contactos, eventos, recursos, utilización y cobertura de alto riesgo.
+- Conteos y porcentajes para las cuatro clasificaciones, aunque alguna no haya sido seleccionada.
+- Exportación CSV de detalle, episodios, resumen y clasificaciones.
+- Comparación de políticas mediante las mismas semillas y una nueva instancia del mismo entorno.
+- Conservación de la interfaz histórica `evaluar_politica`.
 
 **Validación mínima:**
 
 ```bash
-pytest -q tests/test_resource_constraint.py
+pytest -q tests/test_resource_constraint.py tests/test_evaluation_reporting.py
 ```
 
 ## Recuperación
