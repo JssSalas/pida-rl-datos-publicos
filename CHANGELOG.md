@@ -19,6 +19,9 @@ Los cambios relevantes del proyecto se documentan en este archivo.
 - Pruebas del protocolo de evaluación, reportes y políticas base.
 - Regla escalonada configurable: riesgo medio propone mensaje o llamada; riesgo alto propone llamada o teleorientación.
 - Prueba explícita que impide introducir una cuarta categoría de riesgo.
+- Agente Q-learning tabular con discretización de riesgo, score, tiempo sin contacto, mes y recursos.
+- Entrenamiento reproducible, historial por episodio y persistencia segura en formato NPZ.
+- Notebook `06_q_learning_capacidad_v2.ipynb` para entrenar y comparar cuatro políticas bajo el mismo protocolo.
 
 ### Cambiado
 

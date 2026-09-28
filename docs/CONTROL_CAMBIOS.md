@@ -62,6 +62,16 @@ Este documento registra cambios funcionales, evidencia de validación y procedim
 - Se añade una fábrica de políticas para evaluar sensibilidad con otros umbrales, por ejemplo 5, 6 y 7.
 - Se incorporan pruebas para la asignación escalonada, la configuración del umbral y el rechazo de umbrales inválidos.
 
+### V2.5.0 — Q-learning tabular
+
+- Se añade Q-learning epsilon-greedy con actualización de Bellman y cuatro acciones.
+- El estado discreto conserva tres niveles de riesgo e incorpora score, tiempo sin contacto, mes y recursos restantes.
+- Se separan semillas de entrenamiento y evaluación.
+- Se registran recompensa, eventos adversos, ajustes, recursos, epsilon y estados visitados por episodio.
+- La tabla Q se exporta a CSV y el modelo a NPZ sin serialización ejecutable.
+- El notebook 06 compara Aleatoria, Reglas simples, Reglas escalonadas y Q-learning con el mismo protocolo.
+- Pruebas: discretización, actualización de Bellman, reproducibilidad, capacidad, exportación y recuperación del modelo.
+
 ## Recuperación
 
 Para volver al estado anterior sin eliminar historial:
