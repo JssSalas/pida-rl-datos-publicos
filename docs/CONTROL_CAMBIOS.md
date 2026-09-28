@@ -14,53 +14,46 @@ Este documento registra cambios funcionales, evidencia de validación y procedim
 
 ## Registro
 
-### V2.0.0 — Capacidad operativa estricta
+### V2.0.0 — Capacidad estricta
 
 **Commit:** `a3f4a4b45a6ddbba81c51d1fe582ecbc256dfcf4`.
 
-**Cambios funcionales:**
+- Se centralizan nombres, costos y capacidad.
+- Se separan acciones propuestas y ejecutadas.
+- Los recursos se descuentan y nunca quedan negativos.
+- Se registra información suficiente para auditar cada decisión.
+- Validación: cinco pruebas aprobadas.
 
-- Se centralizan nombres, costos de acciones y capacidad predeterminada.
-- Se separan la acción propuesta por el algoritmo y la acción realmente ejecutada.
-- Si faltan recursos, la acción se reduce hasta encontrar la intervención viable de mayor intensidad.
-- Los recursos se descuentan inmediatamente y nunca pueden quedar negativos.
-- La observación incorpora la fracción de recursos mensuales restantes.
-- `info` conserva los campos necesarios para un reporte por paciente y mes.
+### V2.1.0 — Evaluación trazable
 
-**Riesgos de compatibilidad:**
+**Commit:** `d402995f9b1b5cee6cab3e2ecc01c2d71ffad195`.
 
-- La observación cambia de 8 a 9 variables; los modelos previamente entrenados deben reentrenarse.
-- Los costos cambian de `0, 1, 2, 3` a `0, 1, 3, 5`.
+- Registro por algoritmo, semilla, paciente, mes y paso.
+- Resumen por episodio de recompensa, contactos, eventos, recursos, utilización y cobertura.
+- Clasificaciones propuestas y ejecutadas con las cuatro acciones.
+- Exportación de cinco tablas CSV.
 
-**Validación:** cinco pruebas automáticas aprobadas.
+### V2.2.0 — Cohorte y políticas base
 
-### V2.1.0 — Evaluación y reportes trazables
+**Commit:** `9d242aadcd05978a6c331c672ab0e8e99dedd20f`.
+
+- El estado se alinea con las 13 variables usadas por la cohorte existente.
+- Se validan columnas, valores finitos y categorías de riesgo.
+- Se conserva `FOLIO_INT` como identificador del perfil en los reportes.
+- La política aleatoria usa un generador reproducible por semilla.
+- La política por reglas asigna 0 a riesgo bajo, 1 a medio y 2 a alto.
+- Validación acumulada: once pruebas aprobadas.
+
+### V2.3.0 — Notebook de comparación base
 
 **Estado:** En desarrollo.
 
-**Archivos modificados o añadidos:**
-
-- `src/evaluation/evaluate_policies.py`
-- `src/evaluation/reporting.py`
-- `tests/test_evaluation_reporting.py`
-- `CHANGELOG.md`
-- `docs/CONTROL_CAMBIOS.md`
-
-**Cambios funcionales:**
-
-- Registro por algoritmo, semilla, paciente, mes y paso.
-- Conservación separada de acción propuesta y acción ejecutada.
-- Resumen por episodio de recompensa, contactos, eventos, recursos, utilización y cobertura de alto riesgo.
-- Conteos y porcentajes para las cuatro clasificaciones, aunque alguna no haya sido seleccionada.
-- Exportación CSV de detalle, episodios, resumen y clasificaciones.
-- Comparación de políticas mediante las mismas semillas y una nueva instancia del mismo entorno.
-- Conservación de la interfaz histórica `evaluar_politica`.
-
-**Validación mínima:**
-
-```bash
-pytest -q tests/test_resource_constraint.py tests/test_evaluation_reporting.py
-```
+- Se añade `notebooks/05_politicas_base_capacidad_v2.ipynb`.
+- La capacidad, los costos, el horizonte y las semillas se ajustan desde una sola sección.
+- Se reutiliza `cohorte_diabetes.csv` generada por el notebook 03.
+- Se evalúan ambas políticas bajo el mismo protocolo.
+- Se comprueba que no existan recursos negativos ni excesos de capacidad.
+- Se exportan detalle, episodios, resumen y distribuciones de acciones a Google Drive.
 
 ## Recuperación
 
@@ -75,6 +68,12 @@ Para comparar la nueva versión con la línea base:
 
 ```bash
 git diff 542d2cd5765b9f82e8a2f93f01240eb604eba52a..feature/entorno-capacidad-v2
+```
+
+Para inspeccionar un avance concreto:
+
+```bash
+git show <SHA_DEL_COMMIT>
 ```
 
 Si la rama ya fue integrada, se deberá revertir el commit de fusión mediante `git revert`; no se utilizará `git reset --hard` sobre `main`.
