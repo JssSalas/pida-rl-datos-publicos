@@ -1,19 +1,18 @@
+"""Políticas de referencia para comparar agentes de aprendizaje por refuerzo."""
 
-import numpy as np
 
-
-def politica_aleatoria(env, seed=None):
-    rng = np.random.default_rng(seed)
-    return int(rng.integers(0, env.action_space.n))
+def politica_aleatoria(env):
+    """Selecciona 0-3 con igual probabilidad y de forma reproducible por semilla."""
+    return int(env._policy_rng.integers(0, env.action_space.n))
 
 
 def politica_por_reglas(env):
-    row = env.cohorte.iloc[env.idx_actual]
-    riesgo = row["categoria_riesgo"]
+    """Mapeo clínico-operativo simple usado como línea base, no como prescripción."""
+    riesgo = str(env.cohorte.iloc[env.idx_actual]["categoria_riesgo"])
+    return {"bajo": 0, "medio": 1, "alto": 2}[riesgo]
 
-    if riesgo == "alto":
-        return 2
-    elif riesgo == "medio":
-        return 1
-    else:
-        return 0
+
+POLITICAS_BASE = {
+    "Aleatoria": politica_aleatoria,
+    "Reglas de riesgo": politica_por_reglas,
+}

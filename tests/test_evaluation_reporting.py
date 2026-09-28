@@ -9,12 +9,16 @@ from src.evaluation.reporting import construir_reporte, exportar_reporte_csv
 def cohorte():
     return pd.DataFrame(
         {
-            "patient_id": [100, 101, 102, 103],
+            "FOLIO_INT": ["100", "101", "102", "103"],
             "edad": [60, 55, 45, 70],
-            "sexo": [0, 1, 0, 1],
+            "sexo": [1, 2, 1, 2],
             "anios_con_diabetes": [15, 8, 4, 20],
+            "insulina_diaria": [1, 0, 0, 1],
+            "depresion": [0, 1, 0, 1],
+            "consultas_control_12m": [5, 3, 1, 6],
+            "num_hospitalizaciones": [1, 0, 0, 2],
             "num_complicaciones": [2, 1, 0, 3],
-            "num_comorbilidades": [1, 1, 0, 2],
+            "score_riesgo": [13, 8, 2, 15],
             "categoria_riesgo": ["alto", "medio", "bajo", "alto"],
         }
     )

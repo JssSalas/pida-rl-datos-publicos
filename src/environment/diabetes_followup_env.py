@@ -14,11 +14,34 @@ class DiabetesFollowUpEnv(gym.Env):
 
     Cada paso corresponde a un perfil. El algoritmo propone una acción de 0 a 3;
     el entorno ejecuta la acción más intensa que no supere la propuesta y que sea
-    viable con los recursos restantes. El simulador es metodológico y no prescribe
-    atención clínica individual.
+    viable con los recursos restantes. Es un simulador metodológico, no un sistema
+    de recomendación clínica individual.
     """
 
     metadata = {"render_modes": []}
+    COLUMNAS_REQUERIDAS = [
+        "edad",
+        "sexo",
+        "anios_con_diabetes",
+        "insulina_diaria",
+        "depresion",
+        "consultas_control_12m",
+        "num_hospitalizaciones",
+        "num_complicaciones",
+        "score_riesgo",
+        "categoria_riesgo",
+    ]
+    COLUMNAS_NUMERICAS = [
+        "edad",
+        "sexo",
+        "anios_con_diabetes",
+        "insulina_diaria",
+        "depresion",
+        "consultas_control_12m",
+        "num_hospitalizaciones",
+        "num_complicaciones",
+        "score_riesgo",
+    ]
 
     def __init__(
         self,
@@ -33,17 +56,27 @@ class DiabetesFollowUpEnv(gym.Env):
             raise ValueError("La cohorte no puede estar vacía.")
         if int(horizonte) < 1:
             raise ValueError("El horizonte debe ser al menos un mes.")
+        faltantes = [c for c in self.COLUMNAS_REQUERIDAS if c not in cohorte_df.columns]
+        if faltantes:
+            raise KeyError("Faltan columnas en la cohorte: " + ", ".join(faltantes))
 
         self.cohorte_base = cohorte_df.reset_index(drop=True).copy()
+        valores = self.cohorte_base[self.COLUMNAS_NUMERICAS].to_numpy(dtype=float)
+        if not np.isfinite(valores).all():
+            raise ValueError("La cohorte contiene valores numéricos faltantes o infinitos.")
+        if not self.cohorte_base["categoria_riesgo"].isin({"bajo", "medio", "alto"}).all():
+            raise ValueError("categoria_riesgo solo admite bajo, medio o alto.")
+
         self.n_perfiles = len(self.cohorte_base)
         self.capacidad_mensual = self._normalizar_capacidad(capacidad_mensual)
         self.horizonte = int(horizonte)
         self.costo_accion = self._validar_costos(costos_accion or DEFAULT_ACTION_COSTS)
         self._rng = np.random.default_rng(seed)
+        self._policy_rng = np.random.default_rng(None if seed is None else int(seed) + 1)
 
-        # Ocho variables originales más la fracción de recursos disponibles.
+        # Nueve variables de perfil, riesgo, historial, tiempo y recursos.
         self.observation_space = spaces.Box(
-            low=0.0, high=1.0, shape=(9,), dtype=np.float32
+            low=0.0, high=1.0, shape=(13,), dtype=np.float32
         )
         self.action_space = spaces.Discrete(4)
 
@@ -68,6 +101,10 @@ class DiabetesFollowUpEnv(gym.Env):
             raise ValueError("Los costos deben ser no decrecientes con la intensidad.")
         return normalizados
 
+    @staticmethod
+    def _norm(valor, denominador):
+        return float(np.clip(float(valor) / max(float(denominador), 1.0), 0.0, 1.0))
+
     @property
     def recursos_restantes(self):
         return self.presupuesto_mensual - self.recursos_usados_mes
@@ -76,6 +113,7 @@ class DiabetesFollowUpEnv(gym.Env):
         super().reset(seed=seed)
         if seed is not None:
             self._rng = np.random.default_rng(seed)
+            self._policy_rng = np.random.default_rng(int(seed) + 1)
 
         self.cohorte = self.cohorte_base.copy()
         self.cohorte["meses_sin_contacto"] = 0
@@ -93,22 +131,27 @@ class DiabetesFollowUpEnv(gym.Env):
 
     def _get_obs(self, idx):
         row = self.cohorte.iloc[idx]
-        riesgo_map = {"bajo": 0.0, "medio": 0.5, "alto": 1.0}
+        riesgo_ordinal = {"bajo": 0, "medio": 1, "alto": 2}
         fraccion_recursos = (
             self.recursos_restantes / self.presupuesto_mensual
             if self.presupuesto_mensual > 0
             else 0.0
         )
+        sexo_normalizado = 0.0 if float(row["sexo"]) == 1.0 else 1.0
         return np.array(
             [
-                np.clip(float(row["edad"]) / 100.0, 0.0, 1.0),
-                np.clip(float(row["sexo"]), 0.0, 1.0),
-                np.clip(float(row["anios_con_diabetes"]) / 50.0, 0.0, 1.0),
-                np.clip(float(row["num_complicaciones"]) / 9.0, 0.0, 1.0),
-                np.clip(float(row["num_comorbilidades"]) / 2.0, 0.0, 1.0),
-                riesgo_map.get(row["categoria_riesgo"], 0.0),
-                np.clip(float(row["meses_sin_contacto"]) / 12.0, 0.0, 1.0),
-                np.clip(float(self.mes_actual) / self.horizonte, 0.0, 1.0),
+                self._norm(row["edad"], 100),
+                sexo_normalizado,
+                self._norm(row["anios_con_diabetes"], 80),
+                float(np.clip(row["insulina_diaria"], 0, 1)),
+                float(np.clip(row["depresion"], 0, 1)),
+                self._norm(row["consultas_control_12m"], 24),
+                self._norm(row["num_hospitalizaciones"], 12),
+                self._norm(row["num_complicaciones"], 5),
+                self._norm(row["score_riesgo"], 16),
+                riesgo_ordinal[str(row["categoria_riesgo"])] / 2.0,
+                self._norm(row["meses_sin_contacto"], self.horizonte),
+                self._norm(self.mes_actual, self.horizonte),
                 np.clip(fraccion_recursos, 0.0, 1.0),
             ],
             dtype=np.float32,
@@ -121,15 +164,29 @@ class DiabetesFollowUpEnv(gym.Env):
                 return accion
         return 0
 
-    def _calcular_recompensa(self, nivel_riesgo, accion_ejecutada, evento_adverso):
+    def _probabilidad_evento(self, row, nivel_riesgo, accion_ejecutada):
+        base = (
+            0.01
+            + 0.025 * nivel_riesgo
+            + 0.010 * float(row["num_complicaciones"])
+            + 0.020 * float(row["num_hospitalizaciones"] > 0)
+            + 0.005 * min(float(row["meses_sin_contacto"]), 6)
+        )
+        reduccion = {0: 0.00, 1: 0.20, 2: 0.45, 3: 0.65}[accion_ejecutada]
+        return float(np.clip(base * (1 - reduccion), 0.0, 0.80))
+
+    @staticmethod
+    def _calcular_recompensa(nivel_riesgo, accion_ejecutada, evento_adverso):
         recompensa = 0.0
         if accion_ejecutada > 0:
-            recompensa += {0: 0.10, 1: 1.0, 2: 3.0}[nivel_riesgo]
+            recompensa += {1: 0.5, 2: 1.0, 3: 1.5}[accion_ejecutada] * (
+                nivel_riesgo + 1
+            )
         else:
             recompensa -= {0: 0.0, 1: 0.5, 2: 1.5}[nivel_riesgo]
         if evento_adverso:
             recompensa -= 5.0
-        return recompensa
+        return float(recompensa)
 
     def step(self, action):
         if not self.action_space.contains(action):
@@ -147,13 +204,8 @@ class DiabetesFollowUpEnv(gym.Env):
         recursos_despues = self.recursos_restantes
 
         riesgo_map = {"bajo": 0, "medio": 1, "alto": 2}
-        nivel_riesgo = riesgo_map.get(row["categoria_riesgo"], 0)
-        meses_sin_contacto = float(row["meses_sin_contacto"])
-        prob_evento_base = (
-            0.02 + 0.03 * nivel_riesgo + min(0.005 * meses_sin_contacto, 0.05)
-        )
-        reduccion = {0: 0.0, 1: 0.30, 2: 0.60, 3: 0.85}[accion_ejecutada]
-        prob_evento = np.clip(prob_evento_base * (1 - reduccion), 0.0, 1.0)
+        nivel_riesgo = riesgo_map[str(row["categoria_riesgo"])]
+        prob_evento = self._probabilidad_evento(row, nivel_riesgo, accion_ejecutada)
         evento_adverso = bool(self._rng.random() < prob_evento)
         reward = self._calcular_recompensa(
             nivel_riesgo, accion_ejecutada, evento_adverso
@@ -180,7 +232,9 @@ class DiabetesFollowUpEnv(gym.Env):
             if not terminated
             else np.zeros(self.observation_space.shape, dtype=np.float32)
         )
-        perfil_id = row.get("patient_id", row.get("perfil_id", indice_decision))
+        perfil_id = row.get(
+            "FOLIO_INT", row.get("patient_id", row.get("perfil_id", indice_decision))
+        )
         info = {
             "perfil_id": perfil_id,
             "indice_perfil": indice_decision,
@@ -203,7 +257,7 @@ class DiabetesFollowUpEnv(gym.Env):
             "recursos_usados_mes": self.presupuesto_mensual - recursos_despues,
             "capacidad_mensual": self.presupuesto_mensual,
             "evento_adverso": evento_adverso,
-            "prob_evento": float(prob_evento),
+            "prob_evento": prob_evento,
             "excede_capacidad": False,
         }
         return obs, reward, terminated, truncated, info
