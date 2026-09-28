@@ -82,6 +82,16 @@ Este documento registra cambios funcionales, evidencia de validación y procedim
 - Se conserva exclusivamente la estratificación de riesgo bajo, medio y alto.
 - Pruebas: red, replay circular, reproducibilidad, sincronización objetivo, capacidad y recuperación del modelo.
 
+### V2.7.0 — Proximal Policy Optimization
+
+- Se añade PPO discreto con red actor-crítico compartida de 13 entradas y cuatro acciones.
+- Se implementan rollouts on-policy, ventaja generalizada, objetivo recortado, entropía y parada temprana por KL.
+- Entrenamiento reproducible con semillas separadas de evaluación e historial por actualización.
+- El modelo se persiste en NPZ sin serialización ejecutable.
+- El notebook 08 compara políticas base, Q-learning, DQN y PPO bajo el mismo protocolo.
+- Se conserva exclusivamente la estratificación de riesgo bajo, medio y alto.
+- Pruebas: probabilidades, GAE, reproducibilidad, actualización, capacidad y recuperación del modelo.
+
 ## Recuperación
 
 Para volver al estado anterior sin eliminar historial:

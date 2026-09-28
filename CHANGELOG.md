@@ -24,6 +24,8 @@ Los cambios relevantes del proyecto se documentan en este archivo.
 - Notebook `06_q_learning_capacidad_v2.ipynb` para entrenar y comparar cuatro políticas bajo el mismo protocolo.
 - Agente DQN con red neuronal, replay buffer, red objetivo, Adam y recorte de gradiente.
 - Persistencia DQN en NPZ y notebook `07_dqn_capacidad_v2.ipynb` para comparar cinco políticas.
+- Agente PPO actor-crítico con objetivo recortado, GAE, entropía y parada temprana por KL.
+- Persistencia PPO en NPZ y notebook `08_ppo_capacidad_v2.ipynb` para comparar seis políticas.
 
 ### Cambiado
 
