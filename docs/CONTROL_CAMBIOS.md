@@ -46,14 +46,21 @@ Este documento registra cambios funcionales, evidencia de validación y procedim
 
 ### V2.3.0 — Notebook de comparación base
 
-**Estado:** En desarrollo.
+**Commit:** `d47872beb09775ea8b05c5f9f63e7a9ed3f2528e`.
 
 - Se añade `notebooks/05_politicas_base_capacidad_v2.ipynb`.
 - La capacidad, los costos, el horizonte y las semillas se ajustan desde una sola sección.
 - Se reutiliza `cohorte_diabetes.csv` generada por el notebook 03.
-- Se evalúan ambas políticas bajo el mismo protocolo.
-- Se comprueba que no existan recursos negativos ni excesos de capacidad.
+- Se comprueban recursos negativos y excesos de capacidad.
 - Se exportan detalle, episodios, resumen y distribuciones de acciones a Google Drive.
+
+### V2.4.0 — Reglas escalonadas
+
+- Se mantiene exactamente la estratificación `bajo`, `medio` y `alto`; no se crea una cuarta categoría.
+- Se añade una tercera referencia: bajo propone 0; medio propone 1 o 2; alto propone 2 o 3.
+- El umbral predeterminado de teleorientación es `score_riesgo >= 6` y se documenta como supuesto operativo configurable.
+- Se añade una fábrica de políticas para evaluar sensibilidad con otros umbrales, por ejemplo 5, 6 y 7.
+- Se incorporan pruebas para la asignación escalonada, la configuración del umbral y el rechazo de umbrales inválidos.
 
 ## Recuperación
 
