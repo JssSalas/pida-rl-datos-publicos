@@ -72,6 +72,16 @@ Este documento registra cambios funcionales, evidencia de validación y procedim
 - El notebook 06 compara Aleatoria, Reglas simples, Reglas escalonadas y Q-learning con el mismo protocolo.
 - Pruebas: discretización, actualización de Bellman, reproducibilidad, capacidad, exportación y recuperación del modelo.
 
+### V2.6.0 — Deep Q-Network
+
+- Se añade DQN con una red de 13 entradas, dos capas ocultas configurables y cuatro salidas.
+- Se incorporan replay buffer circular, red objetivo, Bellman, Adam y recorte de gradiente.
+- Entrenamiento por pasos con semillas separadas de evaluación e historial por ventanas.
+- El modelo se persiste en NPZ sin serialización ejecutable.
+- El notebook 07 compara políticas base, Q-learning y DQN bajo el mismo protocolo.
+- Se conserva exclusivamente la estratificación de riesgo bajo, medio y alto.
+- Pruebas: red, replay circular, reproducibilidad, sincronización objetivo, capacidad y recuperación del modelo.
+
 ## Recuperación
 
 Para volver al estado anterior sin eliminar historial:

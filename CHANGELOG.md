@@ -22,6 +22,8 @@ Los cambios relevantes del proyecto se documentan en este archivo.
 - Agente Q-learning tabular con discretización de riesgo, score, tiempo sin contacto, mes y recursos.
 - Entrenamiento reproducible, historial por episodio y persistencia segura en formato NPZ.
 - Notebook `06_q_learning_capacidad_v2.ipynb` para entrenar y comparar cuatro políticas bajo el mismo protocolo.
+- Agente DQN con red neuronal, replay buffer, red objetivo, Adam y recorte de gradiente.
+- Persistencia DQN en NPZ y notebook `07_dqn_capacidad_v2.ipynb` para comparar cinco políticas.
 
 ### Cambiado
 
