@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - feature/**
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Verificar sintaxis
+        run: python -m compileall -q src dashboard_streamlit tests
+
+      - name: Ejecutar pruebas
+        env:
+          PYTHONHASHSEED: "0"
+        run: python -m pytest -q
+
+      - name: Importar componentes críticos
+        run: |
+          python - <<'PY'
+          from src.environment.diabetes_followup_env import DiabetesFollowUpEnv
+          from src.policies.q_learning import QLearningAgent
+          from src.policies.dqn import DQNAgent
+          from src.policies.ppo import PPOAgent
+          from src.evaluation.integral import evaluar_politicas_integral
+          print("Importaciones críticas correctas")
+          PY
