@@ -29,6 +29,10 @@ Los cambios relevantes del proyecto se documentan en este archivo.
 - Evaluación integral de seis políticas con estabilidad entre semillas y sensibilidad a capacidad.
 - Métricas y brechas operativas por sexo codificado, grupo de edad y categoría de riesgo.
 - Notebook `09_evaluacion_integral_equidad_v2.ipynb` y manifiesto auditable de resultados CSV.
+- Dashboard Streamlit V2 conectado a los reportes integrales, con filtros comunes y descarga de tablas.
+- Visualización de clasificaciones propuestas y ejecutadas, sensibilidad a capacidad, estabilidad y equidad operativa.
+- Validación de esquema, manifiesto, acciones 0–3 y conservación exclusiva de riesgo bajo, medio y alto.
+- Huella reproducible del conjunto de archivos cargado para apoyar trazabilidad.
 
 ### Cambiado
 
@@ -38,8 +42,10 @@ Los cambios relevantes del proyecto se documentan en este archivo.
 - El identificador `FOLIO_INT` se conserva como `perfil_id` en el reporte.
 - La interfaz histórica `evaluar_politica` se conserva, pero internamente utiliza el registro detallado.
 - La estratificación continúa limitada a `bajo`, `medio` y `alto`; `score_riesgo` únicamente gradúa la intensidad dentro de medio y alto.
+- El dashboard deja de consumir las tablas agregadas V1 y usa directamente las salidas auditables del notebook 09.
 
 ### Compatibilidad
 
 - Aunque se conserva una observación de 13 elementos, su última variable representa capacidad estricta y los costos cambiaron; los modelos existentes deberán reentrenarse.
 - El umbral predeterminado `score_riesgo >= 6` para teleorientación es un supuesto operativo configurable, no una categoría ni un punto de corte clínico validado.
+- El dashboard V2 requiere los CSV integrales; los archivos `*_dashboard_v1` se mantienen como legado, pero ya no alimentan `app.py`.

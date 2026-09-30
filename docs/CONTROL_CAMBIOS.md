@@ -94,6 +94,8 @@ Este documento registra cambios funcionales, evidencia de validación y procedim
 
 ### V2.8.0 — Evaluación integral y equidad operativa
 
+**Commit:** `f3941ab60053dbb8fe0c6f7bae57dc12cc5d35f0`.
+
 - Se comparan las seis políticas con la misma cohorte, dinámica, costos, horizonte y semillas.
 - Se incorpora estabilidad entre semillas para recompensa, eventos, recursos, utilización, cobertura y ajustes.
 - Se añaden escenarios configurables de sensibilidad a capacidad, sin presentar sus valores como capacidad institucional observada.
@@ -102,6 +104,18 @@ Este documento registra cambios funcionales, evidencia de validación y procedim
 - El notebook 09 exige modelos Q-learning, DQN y PPO ya entrenados y exporta tablas CSV con manifiesto.
 - Se conserva exclusivamente la estratificación de riesgo bajo, medio y alto.
 - Validación acumulada: 34 pruebas aprobadas y sintaxis de las celdas ejecutables verificada.
+
+### V2.9.0 — Dashboard Streamlit integral
+
+- `app.py` consume directamente los CSV del reporte integral V2 y ya no las tablas agregadas V1.
+- Se incorporan filtros comunes por política y vistas de panorama, clasificaciones, capacidad, equidad y trazabilidad.
+- Se contrastan acciones propuestas y ejecutadas para las clasificaciones 0–3.
+- Se visualizan sensibilidad a capacidad, variabilidad entre semillas y brechas descriptivas por subgrupo.
+- El cargador valida esquema, conteos del manifiesto, acciones admitidas y categorías de riesgo.
+- Una prueba explícita rechaza cualquier cuarta categoría distinta de bajo, medio y alto.
+- Se añade una huella SHA-256 corta para identificar el conjunto de CSV cargado.
+- El dashboard admite una carpeta configurable mediante `PIDA_DASHBOARD_DATA_DIR` y exporta tablas filtradas.
+- Los datos V1 continúan en el repositorio únicamente como legado; no se presentan como resultados V2.
 
 ## Recuperación
 
