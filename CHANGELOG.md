@@ -33,11 +33,13 @@ Los cambios relevantes del proyecto se documentan en este archivo.
 - El dashboard consume directamente las salidas auditables del notebook 09.
 - El README refleja la arquitectura, ejecución y estado real de la rama V2.
 - La comprobación de importaciones de CI referencia la API pública real de evaluación integral.
+- Ruff queda fijado en la versión 0.13.2 para que la validación estática sea determinista y reproducible.
 
 ### Corregido
 
-- Fallo de CI en Python 3.10–3.12 causado por importar un símbolo inexistente después de que las 39 pruebas habían terminado correctamente.
+- Fallo inicial de CI en Python 3.10–3.12 causado por importar un símbolo inexistente después de que las 39 pruebas habían terminado correctamente.
 - Tres incidencias E702 de estilo en las pruebas DQN y PPO detectadas durante la auditoría previa al pull request.
+- Segundo fallo de CI causado por resolver automáticamente una versión futura de Ruff con reglas adicionales no presentes en la versión auditada.
 
 ### Compatibilidad
 

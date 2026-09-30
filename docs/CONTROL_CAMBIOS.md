@@ -91,9 +91,13 @@ Este documento registra cambios funcionales, evidencia de validación y procedim
 
 ### V2.11.0 — Auditoría final y reparación de CI
 
-- Diagnóstico del primer flujo de CI: las 39 pruebas aprobaron en Python 3.10, 3.11 y 3.12; falló únicamente la comprobación final por importar un símbolo inexistente.
-- La importación se alinea con `construir_reporte_integral`, parte de la API pública real del módulo.
-- Se incorpora Ruff a CI y se corrigen tres incidencias E702 en pruebas DQN/PPO.
+**Commit de auditoría inicial:** `d27e6aa929f196157c022451daa271efa55d3b13`.
+
+- El primer flujo de CI ejecutó correctamente 39 pruebas en Python 3.10, 3.11 y 3.12, pero falló al importar un símbolo inexistente.
+- La importación se alineó con `construir_reporte_integral`, parte de la API pública real del módulo.
+- Se incorporó Ruff a CI y se corrigieron tres incidencias E702 en pruebas DQN/PPO.
+- La segunda ejecución falló antes de las pruebas porque el rango abierto de Ruff resolvió la versión 0.16.9, cuyas reglas predeterminadas difieren de la 0.13.2 usada durante la auditoría.
+- Para hacer el control estático determinista, Ruff queda fijado exactamente en 0.13.2; con esa versión el árbol completo supera la validación.
 - Auditoría local: 39 pruebas aprobadas, árbol de trabajo limpio, sin archivos mayores a 5 MB, sin modelos o credenciales versionados y notebooks sin salidas ejecutadas.
 - No se modifican políticas, recompensas, transiciones, costos, acciones ni categorías de riesgo.
 
