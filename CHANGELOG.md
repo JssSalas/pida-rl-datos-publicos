@@ -21,6 +21,7 @@ Los cambios relevantes del proyecto se documentan en este archivo.
 - Archivo raíz `requirements.txt` para instalación reproducible.
 - Matriz `docs/CRISP_DM.md` que enlaza fases, evidencia y puertas de aceptación.
 - Protocolo `docs/VALIDACION_REPRODUCIBILIDAD.md` para reconstrucción, pruebas y recuperación.
+- Verificación estática con Ruff dentro de la matriz de integración continua.
 
 ### Cambiado
 
@@ -31,6 +32,12 @@ Los cambios relevantes del proyecto se documentan en este archivo.
 - La estratificación continúa limitada a `bajo`, `medio` y `alto`; `score_riesgo` gradúa la intensidad dentro de medio y alto.
 - El dashboard consume directamente las salidas auditables del notebook 09.
 - El README refleja la arquitectura, ejecución y estado real de la rama V2.
+- La comprobación de importaciones de CI referencia la API pública real de evaluación integral.
+
+### Corregido
+
+- Fallo de CI en Python 3.10–3.12 causado por importar un símbolo inexistente después de que las 39 pruebas habían terminado correctamente.
+- Tres incidencias E702 de estilo en las pruebas DQN y PPO detectadas durante la auditoría previa al pull request.
 
 ### Compatibilidad
 

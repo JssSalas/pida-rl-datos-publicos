@@ -24,7 +24,8 @@ def test_network_shape_and_learning_changes_predictions():
     net = DenseQNetwork(hidden_sizes=(8, 8), seed=1)
     x = np.ones((4, 13), dtype=np.float32)
     before = net.predict(x).copy()
-    target = before.copy(); target[:, 2] += 2
+    target = before.copy()
+    target[:, 2] += 2
     for _ in range(10):
         net.train_batch(x, target, learning_rate=0.01)
     assert net.predict(x).shape == (4, 4)

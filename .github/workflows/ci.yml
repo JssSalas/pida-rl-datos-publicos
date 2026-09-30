@@ -43,6 +43,9 @@ jobs:
       - name: Verificar sintaxis
         run: python -m compileall -q src dashboard_streamlit tests
 
+      - name: Verificar estilo estático
+        run: python -m ruff check src dashboard_streamlit tests
+
       - name: Ejecutar pruebas
         env:
           PYTHONHASHSEED: "0"
@@ -55,6 +58,6 @@ jobs:
           from src.policies.q_learning import QLearningAgent
           from src.policies.dqn import DQNAgent
           from src.policies.ppo import PPOAgent
-          from src.evaluation.integral import evaluar_politicas_integral
+          from src.evaluation.integral import construir_reporte_integral
           print("Importaciones críticas correctas")
           PY

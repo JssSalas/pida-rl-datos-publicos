@@ -80,12 +80,22 @@ Este documento registra cambios funcionales, evidencia de validación y procedim
 
 ### V2.10.0 — Reproducibilidad, CI y cierre CRISP-DM
 
+**Commit:** `2404b78526f2f85e59883329da316666ebf0db02`.
+
 - Se añade `requirements.txt` en la raíz con rangos compatibles y explícitos.
 - GitHub Actions valida Python 3.10–3.12 mediante instalación, compilación, importaciones y pruebas.
 - Se crea la matriz CRISP-DM con evidencia y puertas de aceptación.
 - Se documentan el orden de ejecución, metadatos mínimos, invariantes y lista previa a fusión.
 - El README se alinea con la arquitectura y estado real de V2.
 - Este bloque no modifica las políticas, recompensas, transiciones ni categorías de riesgo.
+
+### V2.11.0 — Auditoría final y reparación de CI
+
+- Diagnóstico del primer flujo de CI: las 39 pruebas aprobaron en Python 3.10, 3.11 y 3.12; falló únicamente la comprobación final por importar un símbolo inexistente.
+- La importación se alinea con `construir_reporte_integral`, parte de la API pública real del módulo.
+- Se incorpora Ruff a CI y se corrigen tres incidencias E702 en pruebas DQN/PPO.
+- Auditoría local: 39 pruebas aprobadas, árbol de trabajo limpio, sin archivos mayores a 5 MB, sin modelos o credenciales versionados y notebooks sin salidas ejecutadas.
+- No se modifican políticas, recompensas, transiciones, costos, acciones ni categorías de riesgo.
 
 ## Recuperación
 

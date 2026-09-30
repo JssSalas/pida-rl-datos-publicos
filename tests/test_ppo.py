@@ -64,7 +64,9 @@ def test_ppo_update_changes_parameters_and_reports_metrics():
     actions, logs, values = [], [], []
     for state in states:
         action, logp, value = agent.seleccionar_accion(state)
-        actions.append(action); logs.append(logp); values.append(value)
+        actions.append(action)
+        logs.append(logp)
+        values.append(value)
     before = {k: v.copy() for k, v in agent.network.params.items()}
     metrics = agent.actualizar({
         "states": states, "actions": actions, "log_probs": logs,
