@@ -92,6 +92,17 @@ Este documento registra cambios funcionales, evidencia de validación y procedim
 - Se conserva exclusivamente la estratificación de riesgo bajo, medio y alto.
 - Pruebas: probabilidades, GAE, reproducibilidad, actualización, capacidad y recuperación del modelo.
 
+### V2.8.0 — Evaluación integral y equidad operativa
+
+- Se comparan las seis políticas con la misma cohorte, dinámica, costos, horizonte y semillas.
+- Se incorpora estabilidad entre semillas para recompensa, eventos, recursos, utilización, cobertura y ajustes.
+- Se añaden escenarios configurables de sensibilidad a capacidad, sin presentar sus valores como capacidad institucional observada.
+- Se calculan métricas de cobertura, intensidad, ajustes, eventos y recompensa por sexo codificado, grupo de edad y riesgo.
+- Las brechas max-min se documentan como diagnósticos operativos descriptivos, no como pruebas de equidad clínica o causal.
+- El notebook 09 exige modelos Q-learning, DQN y PPO ya entrenados y exporta tablas CSV con manifiesto.
+- Se conserva exclusivamente la estratificación de riesgo bajo, medio y alto.
+- Validación acumulada: 34 pruebas aprobadas y sintaxis de las celdas ejecutables verificada.
+
 ## Recuperación
 
 Para volver al estado anterior sin eliminar historial:

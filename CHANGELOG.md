@@ -26,6 +26,9 @@ Los cambios relevantes del proyecto se documentan en este archivo.
 - Persistencia DQN en NPZ y notebook `07_dqn_capacidad_v2.ipynb` para comparar cinco políticas.
 - Agente PPO actor-crítico con objetivo recortado, GAE, entropía y parada temprana por KL.
 - Persistencia PPO en NPZ y notebook `08_ppo_capacidad_v2.ipynb` para comparar seis políticas.
+- Evaluación integral de seis políticas con estabilidad entre semillas y sensibilidad a capacidad.
+- Métricas y brechas operativas por sexo codificado, grupo de edad y categoría de riesgo.
+- Notebook `09_evaluacion_integral_equidad_v2.ipynb` y manifiesto auditable de resultados CSV.
 
 ### Cambiado
 
