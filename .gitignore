@@ -21,3 +21,6 @@ __pycache__/
 
 # Sistema operativo
 .DS_Store
+
+# Artefacto generado por notebooks/corregidos/04_definicion_mdp_corregido.ipynb
+src/environment/diabetes_followup_env_clean.py

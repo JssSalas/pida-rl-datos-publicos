@@ -22,6 +22,9 @@ Los cambios relevantes del proyecto se documentan en este archivo.
 - Matriz `docs/CRISP_DM.md` que enlaza fases, evidencia y puertas de aceptación.
 - Protocolo `docs/VALIDACION_REPRODUCIBILIDAD.md` para reconstrucción, pruebas y recuperación.
 - Verificación estática con Ruff dentro de la matriz de integración continua.
+- Notebooks corregidos 00–09 en `notebooks/corregidos/`, con bootstrap portable `PROJECT_ROOT`/`REPO_ROOT` y modo prueba `PIDA_MODO_PRUEBA=1`.
+- Resguardo sin cambios de los notebooks históricos 00–04 de Colab en `notebooks/historicos_colab/`.
+- Informe `docs/NOTEBOOKS_CORREGIDOS.md` con la lista de cambios, la auditoría de columnas, las discrepancias y la salida de la ejecución de prueba.
 
 ### Cambiado
 

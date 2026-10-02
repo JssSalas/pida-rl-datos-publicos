@@ -101,6 +101,22 @@ Este documento registra cambios funcionales, evidencia de validación y procedim
 - Auditoría local: 39 pruebas aprobadas, árbol de trabajo limpio, sin archivos mayores a 5 MB, sin modelos o credenciales versionados y notebooks sin salidas ejecutadas.
 - No se modifican políticas, recompensas, transiciones, costos, acciones ni categorías de riesgo.
 
+### V2.11.1 — Resguardo manual de notebooks autocontenidos
+
+**Commit:** `02ab45d580a6ac1627399cf6feffbf43694f90f7` (subida manual del usuario).
+
+- Se añadieron nueve notebooks `06–14 *_autocontenido/_corregido` de una línea de trabajo paralela. No forman parte del flujo 00–09 auditado en V2.12.0.
+
+### V2.12.0 — Notebooks corregidos 00–09 y ejecución de prueba
+
+- Se crean diez notebooks corregidos en `notebooks/corregidos/`. Los originales no se modifican.
+- Se resguardan sin cambios en `notebooks/historicos_colab/` los originales 00–04, que solo existían en Google Drive.
+- Las rutas fijas de Drive se reemplazan por `PROJECT_ROOT` (datos y resultados) y `REPO_ROOT` (código).
+- Se añade un modo prueba (`PIDA_MODO_PRUEBA=1`) con cohorte estratificada de 120 perfiles, capacidad proporcional y pocos episodios.
+- Ejecución completa 00 → 09 sin errores. La cohorte regenerada es idéntica a la de Drive (1 542 × 16). Se registran cero violaciones de capacidad y solo aparecen las categorías bajo, medio y alto.
+- La auditoría de columnas no encontró variables inexistentes. Las discrepancias metodológicas quedan documentadas en `docs/NOTEBOOKS_CORREGIDOS.md`.
+- No se modifican `src/`, políticas, recompensas, transiciones, costos, acciones ni categorías de riesgo. `pytest` reporta 39 aprobadas.
+
 ## Recuperación
 
 Para volver al estado estable sin eliminar historial:
