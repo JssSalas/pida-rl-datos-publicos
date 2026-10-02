@@ -1,4 +1,4 @@
-# Notebooks corregidos y ejecución de prueba (V2.12.0)
+# Notebooks corregidos y ejecución de prueba (V2.12.0 – V2.13.0)
 
 ## Alcance
 
@@ -89,7 +89,7 @@ No se encontró ninguna variable usada que no exista o que no se cree explícita
 2. **Presión de capacidad.** Con capacidad 100 y 1 542 perfiles hay 0.065 unidades por persona al mes. La utilización es del 100 % y la cobertura de alto riesgo es muy baja en todas las políticas. Debe revisarse como supuesto del escenario.
 3. **Semillas de carga.** Los notebooks 08 y 09 cargan Q-learning, DQN y PPO con `seed=20_000`. Esto no afecta la evaluación, porque es determinista y sin exploración.
 4. **Archivo generado.** El notebook 04 escribe `src/environment/diabetes_followup_env_clean.py` en la copia local. Es un artefacto generado y se ignora en Git.
-5. **Línea paralela.** Los notebooks `06–14 *_autocontenido/_corregido` subidos manualmente pertenecen a otra línea de trabajo. No forman parte de esta ejecución.
+5. **Línea paralela.** Los notebooks `06–14 *_autocontenido/_corregido` subidos manualmente forman la línea v1 de despliegue. Se corrigieron y ejecutaron en V2.13.0 (ver la sección siguiente).
 
 ## Salida de la ejecución de prueba
 
@@ -164,3 +164,82 @@ export PIDA_PROJECT_ROOT=/ruta/PIDA-RL-Diabetes   # con data/raw/*.sav
 export PIDA_REPO_ROOT=/ruta/pida-rl-datos-publicos
 export PIDA_MODO_PRUEBA=1
 ```
+
+## Línea v1 de despliegue (notebooks 05–14 autocontenidos, V2.13.0)
+
+Los notebooks `06–14` subidos al repositorio forman una línea de trabajo propia. Sus entornos se definen dentro de cada notebook, usan Stable-Baselines3 y terminan en el dashboard y su despliegue.
+
+Su insumo inicial, `05_politicas_base_autocontenido.ipynb`, solo existía en Google Drive. Se resguardó sin cambios en `notebooks/historicos_colab/`. Las versiones corregidas están en `notebooks/corregidos/linea_v1_despliegue/`, y los originales no se modificaron.
+
+| Notebook corregido | Origen |
+|---|---|
+| `05_politicas_base_autocontenido_corregido` | Drive `05_politicas_base_autocontenido.ipynb` |
+| `06_entrenamiento_dqn_autocontenido_corregido` | `notebooks/06_entrenamiento_dqn_autocontenido.ipynb` |
+| `07_entrenamiento_q_learning_autocontenido_corregido` | `notebooks/07_entrenamiento_q_learning_autocontenido.ipynb` |
+| `08_entrenamiento_ppo_autocontenido_corregido` | `notebooks/08_entrenamiento_ppo_autocontenido.ipynb` |
+| `09_evaluacion_conjunta_modelos_corregido` | `notebooks/09_evaluacion_conjunta_modelos_corregido.ipynb` |
+| `10_equidad_y_subgrupos_v3_corregido` | `notebooks/10_equidad_y_subgrupos_v3_corregido.ipynb` |
+| `11_visualizaciones_conclusiones_finales_corregido` | `notebooks/11_visualizaciones_conclusiones_finales.ipynb` |
+| `12_generar_dashboard_streamlit_corregido` | `notebooks/12_generar_dashboard_streamlit.ipynb` |
+| `13_despliegue_streamlit_ngrok_y_github_corregido` | `notebooks/13_despliegue_streamlit_ngrok_y_github_corregido.ipynb` |
+| `14_documentacion_crisp_dm_y_reproducibilidad_corregido` | `notebooks/14_documentacion_crisp_dm_y_reproducibilidad.ipynb` |
+
+**Orden de ejecución:**
+
+1. 00–04 (comunes).
+2. V2 05–09, que genera los datos del dashboard principal.
+3. Línea v1: 05 → 14.
+
+### Cambios comunes
+
+- Se eliminaron la detección y el montaje de Drive y el clonado de `main`. Se usa el bootstrap `PROJECT_ROOT`/`REPO_ROOT` con la rama `feature/entorno-capacidad-v2`.
+- `PERSISTENT_ROOT` es la raíz de la línea v1. Coincide con `PROJECT_ROOT`; en modo prueba es `PROJECT_ROOT/prueba_linea_v1`, para no sobrescribir los resultados completos.
+- La cohorte se lee siempre de `PROJECT_ROOT/data/processed/cohorte_diabetes.csv`.
+- En modo prueba se usa la misma muestra estratificada de 120 perfiles. La capacidad de la línea v1 es relativa (0.20), por lo que no se escala.
+- Presupuestos del modo prueba:
+
+| Algoritmo | Prueba | Completo |
+|---|---|---|
+| DQN | 3 000 pasos | 100 000 pasos |
+| Q-learning | 5 episodios | 250 episodios |
+| PPO | 4 096 pasos | 100 000 pasos |
+
+### Errores corregidos en los originales
+
+| Notebook | Problema | Corrección |
+|---|---|---|
+| 13 | B1 copiaba el dashboard v1 sobre `dashboard_streamlit/`. En la rama de trabajo esa carpeta contiene el dashboard V2 (`data_loader.py`, manifiesto y equidad), así que publicar habría revertido V2. | El v1 se publica en `dashboard_streamlit_v1/`. El V2 no se toca y sus datos se publican en `dashboard_data/v2/`. |
+| 13 | Exigía los cuatro secretos de Colab incluso para la vista temporal y no podía ejecutarse fuera de Colab. | Los secretos se leen de Colab o de variables de entorno y solo se exigen cuando se usan. |
+| 13 | B4 podía publicar en cualquier rama, incluida `main`, y B3 comparaba contra `origin/main`. | Se rechaza `main` y se compara contra la rama de trabajo. |
+| 14 | `policy_table.rename(columns={...)` no cerraba la llave, lo que producía un `SyntaxError`. | Se cierra el diccionario. |
+| 14 | `{selected_metrics := ...:.3f}` dentro del f-string se interpretaba como especificador de formato, lo que producía un `NameError`. | Se usa directamente `selected_row.get(...)`. |
+| 12 | El dashboard principal V2 no tenía datos versionados, por lo que la app de Streamlit Cloud fallaría al integrarse el PR. | Nueva sección 9: exporta el reporte integral V2 a `dashboard_data/v2/` y lo valida con el cargador de la app. |
+
+### Nuevas verificaciones
+
+- La celda A0 del notebook 13 renderiza ambas aplicaciones con `streamlit.testing`.
+- La celda A2 comprueba `/_stcore/health`.
+- `tests/test_dashboard_despliegue.py` repite estas comprobaciones en CI.
+
+### Ejecución de prueba de la línea v1
+
+| Notebook | Estado | Segundos |
+|---|---|---|
+| 05_politicas_base_autocontenido | OK | 7.5 |
+| 06_entrenamiento_dqn_autocontenido | OK | 117.5 |
+| 07_entrenamiento_q_learning_autocontenido | OK | 5.8 |
+| 08_entrenamiento_ppo_autocontenido | OK | 112.3 |
+| 09_evaluacion_conjunta_modelos | OK | 1.4 |
+| 10_equidad_y_subgrupos_v3 | OK | 11.5 |
+| 11_visualizaciones_conclusiones_finales | OK | 2.4 |
+| 12_generar_dashboard_streamlit | OK | 1.3 |
+| 13_despliegue_streamlit_ngrok_y_github | OK | 4.8 |
+| 14_documentacion_crisp_dm_y_reproducibilidad | OK | 1.5 |
+
+En las trazas de evaluación (25 920 decisiones de 6 políticas) solo aparecen las categorías bajo, medio y alto y las acciones 0–3.
+
+En el entorno v1, los excesos de capacidad son rechazos con penalización y forman parte de su diseño. Se presentan con las políticas aleatoria, reglas de riesgo y Q-learning.
+
+En el entorno V2 los excesos son imposibles. Ese es el motivo metodológico de V2.
+
+Despliegue: ver `docs/DESPLIEGUE_STREAMLIT.md`.

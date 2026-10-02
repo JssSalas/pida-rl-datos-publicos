@@ -65,6 +65,16 @@ streamlit run dashboard_streamlit/app.py
 
 Consulta [`docs/VALIDACION_REPRODUCIBILIDAD.md`](docs/VALIDACION_REPRODUCIBILIDAD.md) para el protocolo completo.
 
+### Notebooks corregidos y despliegue
+
+- `notebooks/corregidos/`: versiones portables 00–09, con `PROJECT_ROOT` y modo prueba `PIDA_MODO_PRUEBA=1`.
+- `notebooks/corregidos/linea_v1_despliegue/`: línea v1 05–14, que incluye la generación del dashboard (12), el despliegue con ngrok y GitHub (13) y la documentación CRISP-DM (14).
+- Dashboard publicado:
+  - `dashboard_streamlit/app.py` (V2), con datos en `dashboard_data/v2/`.
+  - `dashboard_streamlit_v1/app.py` (línea v1).
+
+Consulta [`docs/NOTEBOOKS_CORREGIDOS.md`](docs/NOTEBOOKS_CORREGIDOS.md) y [`docs/DESPLIEGUE_STREAMLIT.md`](docs/DESPLIEGUE_STREAMLIT.md).
+
 ## Metodología CRISP-DM
 
 | Fase | Evidencia principal | Estado |

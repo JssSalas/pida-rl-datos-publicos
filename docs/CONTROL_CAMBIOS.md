@@ -117,6 +117,16 @@ Este documento registra cambios funcionales, evidencia de validación y procedim
 - La auditoría de columnas no encontró variables inexistentes. Las discrepancias metodológicas quedan documentadas en `docs/NOTEBOOKS_CORREGIDOS.md`.
 - No se modifican `src/`, políticas, recompensas, transiciones, costos, acciones ni categorías de riesgo. `pytest` reporta 39 aprobadas.
 
+### V2.13.0 — Línea v1 de despliegue y dashboards publicables
+
+- Se corrigen los notebooks 05–14 autocontenidos en `notebooks/corregidos/linea_v1_despliegue/` y se resguarda el original 05 de Drive. Los originales no se modifican.
+- Ejecución completa 05 → 14 en modo prueba sin errores.
+- Se corrigen dos errores del notebook 14 que impedían terminarlo: un `SyntaxError` y un `NameError` en un f-string.
+- El notebook 13 ya no sobrescribe el dashboard V2: el v1 se publica en `dashboard_streamlit_v1/` y los datos V2 en `dashboard_data/v2/`. Además, rechaza publicar en `main`, lee los secretos de Colab o de variables de entorno e incluye una prueba de humo con `streamlit.testing`.
+- El notebook 12 exporta y valida el reporte integral V2 para el dashboard principal, sin `detalle.csv`.
+- Nueva prueba `tests/test_dashboard_despliegue.py` y guía `docs/DESPLIEGUE_STREAMLIT.md`.
+- No se modifican `src/`, políticas, recompensas, transiciones, costos, acciones ni categorías de riesgo.
+
 ## Recuperación
 
 Para volver al estado estable sin eliminar historial:

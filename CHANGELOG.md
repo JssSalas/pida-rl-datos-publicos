@@ -25,6 +25,9 @@ Los cambios relevantes del proyecto se documentan en este archivo.
 - Notebooks corregidos 00–09 en `notebooks/corregidos/`, con bootstrap portable `PROJECT_ROOT`/`REPO_ROOT` y modo prueba `PIDA_MODO_PRUEBA=1`.
 - Resguardo sin cambios de los notebooks históricos 00–04 de Colab en `notebooks/historicos_colab/`.
 - Informe `docs/NOTEBOOKS_CORREGIDOS.md` con la lista de cambios, la auditoría de columnas, las discrepancias y la salida de la ejecución de prueba.
+- Línea v1 de despliegue corregida (05–14 autocontenidos) en `notebooks/corregidos/linea_v1_despliegue/`, ejecutada de principio a fin en modo prueba.
+- Dashboard v1 publicado en `dashboard_streamlit_v1/` y datos agregados del dashboard V2 en `dashboard_data/v2/` (ejecución completa, sin trazas por perfil).
+- Pruebas de humo de ambos dashboards con `streamlit.testing` (`tests/test_dashboard_despliegue.py`) y guía `docs/DESPLIEGUE_STREAMLIT.md`.
 
 ### Cambiado
 

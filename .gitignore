@@ -24,3 +24,9 @@ __pycache__/
 
 # Artefacto generado por notebooks/corregidos/04_definicion_mdp_corregido.ipynb
 src/environment/diabetes_followup_env_clean.py
+
+# Excepción: resultados agregados publicados para los dashboards (sin trazas por perfil)
+!dashboard_data/*.csv
+!dashboard_data/*.json
+!dashboard_data/v2/*.csv
+dashboard_data/v2/detalle.csv
