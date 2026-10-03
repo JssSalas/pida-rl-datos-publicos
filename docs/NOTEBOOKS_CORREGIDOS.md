@@ -243,3 +243,31 @@ En el entorno v1, los excesos de capacidad son rechazos con penalización y form
 En el entorno V2 los excesos son imposibles. Ese es el motivo metodológico de V2.
 
 Despliegue: ver `docs/DESPLIEGUE_STREAMLIT.md`.
+
+## Ejecución completa V2 05–10 (V2.14.0)
+
+Configuración: `PIDA_MODO_PRUEBA=0`, cohorte completa de 1 542 perfiles, capacidad mensual 100, costos 0/1/3/5, horizonte de 12 meses.
+
+| Notebook | Estado | Segundos |
+|---|---|---|
+| 05_politicas_base_capacidad_v2_corregido | ok | 5.6 |
+| 06_q_learning_capacidad_v2_corregido (1 500 episodios) | ok | 1 213.6 |
+| 07_dqn_capacidad_v2_corregido (100 000 pasos) | ok | 27.0 |
+| 08_ppo_capacidad_v2_corregido (100 000 pasos) | ok | 24.7 |
+| 09_evaluacion_integral_equidad_v2_corregido | ok | 52.4 |
+| 10_cumplimiento_pida_v2 (nuevo) | ok | 1 343.4 (reutilizó la caché de evaluaciones; incluye unos 15 min de entrenamiento de la sección 12) |
+
+Resumen del notebook 09 (3 semillas):
+
+| Política | Recompensa media | Cobertura de riesgo alto |
+|---|---|---|
+| Reglas simples | −18 542.0 | 4.9 % |
+| Reglas escalonadas | −18 781.7 | 3.9 % |
+| Q-learning | −18 918.8 | 3.5 % |
+| DQN | −19 039.0 | 2.8 % |
+| Aleatoria | −19 144.8 | 2.9 % |
+| PPO | −19 314.0 | 2.1 % |
+
+El notebook 10 evalúa los criterios de la sección 5 del PIDA con 100 episodios por política. Resultados y discusión en `docs/CUMPLIMIENTO_PIDA.md`.
+
+El notebook 10 guarda cada evaluación en `cumplimiento_pida/cache/` con una huella SHA-256 de la configuración: cohorte, escenario, semillas y archivo del modelo. Una nueva ejecución con la misma configuración reutiliza esos resultados.

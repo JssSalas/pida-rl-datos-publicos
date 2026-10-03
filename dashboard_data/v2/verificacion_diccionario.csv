@@ -1,0 +1,10 @@
+variable_pida,en_cohorte,fuente,cobertura
+id_persona,FOLIO_INT (folio ENSANUT; no entra al estado),Adultos,1.0
+edad,edad,Adultos,1.0
+sexo,sexo,Adultos,1.0
+diabetes_diagnosticada,criterio de inclusión a0301 = 1,Adultos,1.0
+comorbilidades,"num_complicaciones, complicacion_*, depresion",Adultos,1.0
+entidad_federativa,no incluida,Adultos: entidad,1.0
+comorbilidades (hipertensión),no incluida,Adultos: a0401,1.0
+imc,no incluida,Antro_Tension: an01_1 / an04_1 (submuestra),0.36835278858625164
+glucosa,no incluida,Muestras_Sangre: sin variable de glucosa (solo serología),

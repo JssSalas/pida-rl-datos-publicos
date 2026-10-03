@@ -149,3 +149,16 @@ git show <SHA_DEL_COMMIT>
 ```
 
 Si la rama ya fue integrada, se deberá revertir el commit de fusión mediante `git revert`; no se utilizará `git reset --hard` sobre `main`.
+
+### V2.14.0 — Cumplimiento de la Definición del PIDA
+
+**Commits:** `cf65620` (código) y el commit de resultados y documentación posterior (ver `git log`).
+
+- Protocolo de evaluación de los criterios de la sección 5 del PIDA:
+  - 100 episodios por política en el escenario base;
+  - 7 escenarios de robustez;
+  - brechas por sexo y edad;
+  - verificación del diccionario de datos.
+- El entorno V2 lee la cohorte con NumPy. La equivalencia se verificó paso a paso contra la versión anterior (observaciones, recompensas, `info` y tabla Q), sin cambios en el MDP.
+- Hallazgo documentado: γ se aplica por decisión (18 504 por episodio). Con γ = 0.95 el agente no percibe el costo de oportunidad de la capacidad. Con γ = 0.9995, Q-learning supera a Reglas simples (+1.4 %). Ver `docs/CUMPLIMIENTO_PIDA.md`.
+- Validación: 48 pruebas aprobadas y Ruff sin observaciones. Ejecución completa de 05–10 sin errores.

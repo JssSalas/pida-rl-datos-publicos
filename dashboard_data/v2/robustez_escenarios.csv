@@ -1,0 +1,9 @@
+escenario,tipo_escenario,mejor_agente_rl,recompensa_mejor_rl,mejor_referencia,recompensa_mejor_referencia,diferencia,mejora_relativa,rl_mejora
+base,base,Q-learning,-19097.25,Reglas simples,-18708.1,-389.15000000000146,-0.02080115030387915,False
+capacidad_alta,capacidad,Q-learning,-18450.75,Reglas simples,-17746.0,-704.75,-0.03971317479995492,False
+capacidad_baja,capacidad,DQN,-19869.25,Reglas simples,-19653.75,-215.5,-0.010964828595051835,False
+costos_altos,costos,DQN,-19529.0,Reglas simples,-19136.0,-393.0,-0.020537207357859532,False
+costos_bajos,costos,Q-learning,-18357.0,Reglas simples,-17902.5,-454.5,-0.025387515710096356,False
+efecto_contacto_menor,transicion,Q-learning,-19114.75,Reglas simples,-18727.75,-387.0,-0.020664521899320526,False
+riesgo_basal_mayor,transicion,Q-learning,-20608.25,Reglas simples,-20212.5,-395.75,-0.01957946815089672,False
+riesgo_basal_menor,transicion,Q-learning,-17524.75,Reglas simples,-17133.25,-391.5,-0.02285030569214831,False

@@ -28,6 +28,13 @@ Los cambios relevantes del proyecto se documentan en este archivo.
 - Línea v1 de despliegue corregida (05–14 autocontenidos) en `notebooks/corregidos/linea_v1_despliegue/`, ejecutada de principio a fin en modo prueba.
 - Dashboard v1 publicado en `dashboard_streamlit_v1/` y datos agregados del dashboard V2 en `dashboard_data/v2/` (ejecución completa, sin trazas por perfil).
 - Pruebas de humo de ambos dashboards con `streamlit.testing` (`tests/test_dashboard_despliegue.py`) y guía `docs/DESPLIEGUE_STREAMLIT.md`.
+- V2.14.0: protocolo de cumplimiento de la Definición del PIDA.
+  - `src/evaluation/pida.py`: IC95, robustez de capacidad, costos y transición, brechas y tabla de criterios.
+  - Nuevo notebook `notebooks/corregidos/10_cumplimiento_pida_v2.ipynb`.
+  - Nueva sección «Criterios PIDA» en el dashboard V2.
+  - Nuevo documento `docs/CUMPLIMIENTO_PIDA.md`.
+- V2.14.0: entorno V2 entre 5 y 12 veces más rápido (acceso NumPy y recortes escalares), con trayectorias idénticas paso a paso. Nueva prueba de sincronización entre `perfil()` y `cohorte`.
+- V2.14.0: `dashboard_data/v2/` con las tablas agregadas de la ejecución completa (05–10).
 
 ### Cambiado
 
