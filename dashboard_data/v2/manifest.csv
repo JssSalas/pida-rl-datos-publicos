@@ -1,0 +1,15 @@
+tabla,archivo,filas
+episodios,episodios.csv,18
+resumen_algoritmos,resumen_algoritmos.csv,6
+clasificaciones_propuestas,clasificaciones_propuestas.csv,24
+clasificaciones_ejecutadas,clasificaciones_ejecutadas.csv,24
+estabilidad_semillas,estabilidad_semillas.csv,6
+metricas_subgrupos,metricas_subgrupos.csv,144
+brechas_equidad,brechas_equidad.csv,54
+sensibilidad_episodios,sensibilidad_episodios.csv,54
+sensibilidad_resumen,sensibilidad_resumen.csv,18
+criterios_pida,criterios_pida.csv,9
+rendimiento_ic,rendimiento_ic.csv,24
+robustez_escenarios,robustez_escenarios.csv,8
+brechas_subgrupos_pida,brechas_subgrupos_pida.csv,144
+verificacion_diccionario,verificacion_diccionario.csv,9

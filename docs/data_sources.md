@@ -6,7 +6,8 @@
 - **URL de descarga:** https://ensanut.insp.mx/encuestas/ensanutcontinua2022/descargas.php
 - **Formato:** SPSS (.sav), Stata (.dta), CSV
 - **Fecha de descarga:** [completar]
-- **Variables clave:** edad, sexo, diagnóstico previo de diabetes, glucosa/HbA1c, comorbilidades, entidad federativa, estrato socioeconómico
+- **Variables clave:** edad, sexo, diagnóstico previo de diabetes, comorbilidades.
+- **Variables usadas en la cohorte:** ver la verificación en `docs/CUMPLIMIENTO_PIDA.md`, sección 4. Glucosa, IMC y entidad federativa no forman parte del estado actual; los archivos `Muestras_Sangre` descargados no contienen glucosa.
 - **Uso en el proyecto:** construcción de perfiles de riesgo (estado del entorno RL)
 - **Condiciones de uso:** dato público, sin identificación individual; citar INSP como fuente
 
@@ -32,7 +33,7 @@
 - **URL:** https://www.inegi.org.mx/app/tabulados/interactivos/?px=Mortalidad_04&bd=Mortalidad
 - **Formato:** Tabulado interactivo (exportable a CSV)
 - **Fecha de descarga:** [completar]
-- **Uso en el proyecto:** validar tasas de eventos adversos simulados
+- **Uso en el proyecto:** contexto de mortalidad (110 059 defunciones por diabetes en 2023, EDR 2023). El código actual no calibra ni valida las tasas simuladas con INEGI; ver la limitación L4 de `docs/CUMPLIMIENTO_PIDA.md`.
 
 ## Decisión metodológica: clasificación de diabetes
 
