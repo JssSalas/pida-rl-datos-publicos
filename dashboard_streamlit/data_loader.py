@@ -28,6 +28,12 @@ OPTIONAL_TABLES = {
     "detalle",
     "sensibilidad_episodios",
     "sensibilidad_resumen",
+    # Notebook 10: cumplimiento de la Definición del PIDA.
+    "criterios_pida",
+    "rendimiento_ic",
+    "robustez_escenarios",
+    "brechas_subgrupos_pida",
+    "verificacion_diccionario",
 }
 
 ALLOWED_RISK_CATEGORIES = {"bajo", "medio", "alto"}

@@ -259,6 +259,59 @@ def render_audit(report, algorithms):
         st.caption(f"Vista limitada a 500 de {len(table):,} filas; la descarga contiene todas las filas filtradas.")
 
 
+def render_pida(report, algorithms):
+    st.header("Criterios de éxito del PIDA")
+    criterios = report.get("criterios_pida")
+    if not isinstance(criterios, pd.DataFrame) or criterios.empty:
+        st.info("Ejecute el notebook 10 corregido y exporte sus tablas para ver esta sección.")
+        return
+    estados = criterios["estado"].value_counts()
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Cumple", int(estados.get("Cumple", 0)))
+    c2.metric("No cumple", int(estados.get("No cumple", 0)))
+    c3.metric("Reportado", int(estados.get("Reportado", 0)))
+    st.dataframe(criterios, hide_index=True, use_container_width=True)
+    st.caption(
+        "Las metas de mejora (≥ 10 %) y de robustez (≥ 80 % de escenarios) son aspiracionales; "
+        "si no se alcanzan, el resultado se documenta junto con el análisis de sensibilidad."
+    )
+
+    ic = report.get("rendimiento_ic")
+    if isinstance(ic, pd.DataFrame) and not ic.empty:
+        rec = filter_algorithms(ic[ic["metrica"] == "recompensa_acumulada"], algorithms)
+        if not rec.empty:
+            rec = rec.assign(err_inf=rec["media"] - rec["ic95_inf"], err_sup=rec["ic95_sup"] - rec["media"])
+            fig = px.bar(
+                rec.sort_values("media"), x="media", y="algoritmo", orientation="h",
+                error_x="err_sup", error_x_minus="err_inf", color_discrete_sequence=["#176d68"],
+                labels={"media": "Recompensa acumulada media (IC95)", "algoritmo": "Política"},
+                title=f"Escenario base · {int(rec['n_episodios'].min())} episodios por política",
+            )
+            st.plotly_chart(chart_layout(fig), use_container_width=True)
+
+    robustez = report.get("robustez_escenarios")
+    if isinstance(robustez, pd.DataFrame) and not robustez.empty:
+        st.subheader("Robustez por escenario")
+        fig = px.bar(
+            robustez.assign(mejora_pct=100 * robustez["mejora_relativa"]), x="mejora_pct", y="escenario",
+            color="tipo_escenario", orientation="h",
+            labels={"mejora_pct": "Mejor RL frente a mejor referencia (%)", "escenario": "Escenario"},
+        )
+        st.plotly_chart(chart_layout(fig), use_container_width=True)
+        st.dataframe(robustez, hide_index=True, use_container_width=True)
+
+    brechas = report.get("brechas_subgrupos_pida")
+    if isinstance(brechas, pd.DataFrame) and not brechas.empty:
+        st.subheader("Brechas de cobertura por subgrupo (escenario base)")
+        b = filter_algorithms(brechas[brechas["escenario"] == "base"], algorithms)
+        st.dataframe(b, hide_index=True, use_container_width=True)
+
+    dic = report.get("verificacion_diccionario")
+    if isinstance(dic, pd.DataFrame) and not dic.empty:
+        st.subheader("Verificación del diccionario de datos")
+        st.dataframe(dic, hide_index=True, use_container_width=True)
+
+
 def main():
     st.sidebar.title("PIDA-RL")
     data_dir = st.sidebar.text_input("Directorio de resultados V2", value=DEFAULT_DATA_DIR)
@@ -284,6 +337,7 @@ def main():
         "Clasificaciones": render_classifications,
         "Capacidad": render_capacity,
         "Equidad": render_equity,
+        "Criterios PIDA": render_pida,
         "Trazabilidad": render_audit,
     }
     page = st.sidebar.radio("Sección", list(pages))

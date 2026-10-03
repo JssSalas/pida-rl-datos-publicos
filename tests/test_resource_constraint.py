@@ -77,3 +77,18 @@ def test_identificador_original_se_conserva():
     env.reset(seed=1)
     _, _, _, _, info = env.step(0)
     assert info["perfil_id"] == "P000"
+
+
+def test_perfil_y_cohorte_sincronizados_con_meses_sin_contacto():
+    """El acceso NumPy (perfil) y la vista pandas (cohorte) deben coincidir en todo momento."""
+    env = DiabetesFollowUpEnv(cohorte(4), capacidad_mensual=1, horizonte=3)
+    env.reset(seed=3)
+    for accion in [0, 1, 0, 0, 2, 0, 3, 0]:
+        idx = env.idx_actual
+        fila = env.cohorte.iloc[idx]
+        perfil = env.perfil(idx)
+        for columna in env.COLUMNAS_NUMERICAS + ["categoria_riesgo", "meses_sin_contacto"]:
+            assert perfil[columna] == fila[columna]
+        env.step(accion)
+    assert env.cohorte["meses_sin_contacto"].tolist() == [int(v) for v in env._meses_sin_contacto]
+    assert env.cohorte["meses_sin_contacto"].max() >= 1

@@ -41,7 +41,7 @@ class QLearningAgent:
 
     @staticmethod
     def _bin_unit(valor, n_bins):
-        valor = float(np.clip(valor, 0.0, 1.0))
+        valor = min(max(float(valor), 0.0), 1.0)
         return min(int(valor * n_bins), n_bins - 1)
 
     def discretizar(self, observacion):
@@ -53,7 +53,7 @@ class QLearningAgent:
         obs = np.asarray(observacion, dtype=float)
         if obs.shape != (13,):
             raise ValueError("La observación debe contener 13 elementos.")
-        riesgo = int(np.clip(round(obs[9] * 2), 0, 2))
+        riesgo = min(max(int(round(float(obs[9]) * 2)), 0), 2)
         return (
             riesgo,
             self._bin_unit(obs[8], 5),

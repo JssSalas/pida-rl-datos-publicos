@@ -1,6 +1,13 @@
 """Políticas de referencia para comparar agentes de aprendizaje por refuerzo."""
 
 
+def _perfil_actual(env):
+    """Perfil en turno; usa el acceso NumPy del entorno V2 si existe."""
+    if hasattr(env, "perfil"):
+        return env.perfil(env.idx_actual)
+    return env.cohorte.iloc[env.idx_actual]
+
+
 def politica_aleatoria(env):
     """Selecciona 0-3 con igual probabilidad y de forma reproducible por semilla."""
     return int(env._policy_rng.integers(0, env.action_space.n))
@@ -8,7 +15,7 @@ def politica_aleatoria(env):
 
 def politica_por_reglas(env):
     """Mapeo operativo simple usado como línea base, no como prescripción clínica."""
-    riesgo = str(env.cohorte.iloc[env.idx_actual]["categoria_riesgo"])
+    riesgo = str(_perfil_actual(env)["categoria_riesgo"])
     return {"bajo": 0, "medio": 1, "alto": 2}[riesgo]
 
 
@@ -30,7 +37,7 @@ def crear_politica_reglas_escalonadas(umbral_teleorientacion=6):
         raise ValueError("umbral_teleorientacion debe ser al menos 4.")
 
     def politica(env):
-        row = env.cohorte.iloc[env.idx_actual]
+        row = _perfil_actual(env)
         riesgo = str(row["categoria_riesgo"])
         score = float(row["score_riesgo"])
         if riesgo == "bajo":
