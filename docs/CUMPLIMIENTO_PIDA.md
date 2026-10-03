@@ -60,7 +60,7 @@ Con γ = 0.9995, el agente supera a la mejor regla con IC disjuntos y cumple el 
 
 ### 2.3 Más entrenamiento sin corregir γ no basta
 
-En el notebook 07, DQN se entrena con 100 000 pasos, unos 5.4 episodios. Para descartar que el problema fuera solo de entrenamiento, DQN y PPO se reentrenaron con 1 000 000 de pasos (unos 54 episodios) y γ = 0.95, en `build/experimento_entrenamiento.py`.
+En el notebook 07, DQN se entrena con 100 000 pasos, unos 5.4 episodios. Para descartar que el problema fuera solo de entrenamiento, DQN y PPO se reentrenaron con 1 000 000 de pasos (unos 54 episodios) y γ = 0.95. El script `build/experimento_entrenamiento.py` está en el ZIP de entrega, no en el repositorio.
 
 Resultados en 30 episodios: DQN −19 197 y PPO −19 157, ambos por debajo de Reglas simples (−18 690).
 
