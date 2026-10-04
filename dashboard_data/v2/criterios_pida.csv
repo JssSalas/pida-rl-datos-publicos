@@ -1,0 +1,10 @@
+dimension,indicador,umbral,resultado,estado,nota
+Validez técnica,Entorno Gymnasium y pruebas de invariantes,100 % de pruebas aprobadas,"48 aprobadas, 0 fallidas",Cumple,Se verifica con pytest en CI (Python 3.10–3.12).
+Factibilidad operativa,Violaciones de capacidad en evaluación,Cero,0 en 600 episodios,Cumple,
+Comparación,Políticas evaluadas con semillas y escenarios comunes,Al menos 3,"6 políticas: Aleatoria, Reglas simples, Reglas escalonadas, Q-learning, DQN, PPO",Cumple,
+Rendimiento,Recompensa media con IC95 (n ≥ 100),Reportada frente a la mejor referencia,Q-learning: -19097.2 [-19133.4; -19061.1] vs Reglas simples: -18708.1 [-18743.8; -18672.4]; n = 100,Cumple,IC disjuntos
+Rendimiento (aspiracional),Mejora del mejor agente frente a la mejor referencia,≥ 10 %,-2.1 %,No cumple,"Si no se alcanza, se documenta la causa con el análisis de sensibilidad."
+Prioridad clínica simulada,Cobertura de riesgo alto del mejor agente frente a «Reglas simples»,No inferior a la política por reglas,3.50 % vs 4.90 %,No cumple,
+Robustez,"Escenarios de capacidad, costos y transición",Resultados en todos; mejora en ≥ 80 % (meta),"7 escenarios (capacidad, costos, transicion); el RL mejora en 0 %",No cumple,Reportados en todos los escenarios.
+Equidad operativa,Diferencia de cobertura entre subgrupos de sexo y edad,Reportada; meta ≤ 10 pp,Máxima entre políticas: 1.42 pp; Q-learning: 0.89 pp,Cumple,
+Reproducibilidad,"Código, semillas, configuración y resultados versionados",Ejecutable desde cero en Colab,Notebooks corregidos con PROJECT_ROOT; semillas y configuración en el manifiesto,Reportado,Se verifica al ejecutar los notebooks 00–10 en Colab.
