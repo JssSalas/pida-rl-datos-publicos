@@ -116,14 +116,14 @@ def render_overview(report, algorithms):
                 labels={reward_col: "Recompensa acumulada media", "algoritmo": "Política"},
                 title="Desempeño medio entre semillas",
             )
-            st.plotly_chart(chart_layout(fig), use_container_width=True)
+            st.plotly_chart(chart_layout(fig))
     with right:
         cols = [
             "algoritmo", "recompensa_acumulada_mean", "cobertura_alto_riesgo_mean",
             "utilizacion_capacidad_mean", "eventos_adversos_mean",
         ]
         st.subheader("Métricas comparables")
-        st.dataframe(summary[[c for c in cols if c in summary]], hide_index=True, use_container_width=True)
+        st.dataframe(summary[[c for c in cols if c in summary]], hide_index=True)
 
 
 def render_classifications(report, algorithms):
@@ -147,10 +147,10 @@ def render_classifications(report, algorithms):
         title="Distribución propuesta y ejecutada",
     )
     fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
-    st.plotly_chart(chart_layout(fig), use_container_width=True)
+    st.plotly_chart(chart_layout(fig))
     st.dataframe(
         combined[["algoritmo", "etapa", "accion", "accion_nombre", "n", "porcentaje"]],
-        hide_index=True, use_container_width=True,
+        hide_index=True,
     )
 
 
@@ -174,7 +174,7 @@ def render_capacity(report, algorithms):
             labels={"capacidad_mensual": "Capacidad mensual", metric: label, "algoritmo": "Política"},
             title=f"{label} ante escenarios de capacidad",
         )
-        st.plotly_chart(chart_layout(fig), use_container_width=True)
+        st.plotly_chart(chart_layout(fig))
     else:
         st.info("El reporte no incluye tablas de sensibilidad. Ejecute esa sección del notebook 09.")
 
@@ -188,7 +188,7 @@ def render_capacity(report, algorithms):
             labels={"algoritmo": "Política", selected: "Rango"},
             title="Variabilidad entre semillas de evaluación",
         )
-        st.plotly_chart(chart_layout(fig), use_container_width=True)
+        st.plotly_chart(chart_layout(fig))
 
 
 def render_equity(report, algorithms):
@@ -216,7 +216,7 @@ def render_equity(report, algorithms):
         labels={"algoritmo": "Política", metric: label, "subgrupo": "Subgrupo"},
         title=f"{label} por {dimension.replace('_', ' ')}",
     )
-    st.plotly_chart(chart_layout(fig), use_container_width=True)
+    st.plotly_chart(chart_layout(fig))
 
     gap_col = f"brecha_{metric}"
     gap_subset = gaps.loc[gaps["dimension"] == dimension]
@@ -228,7 +228,7 @@ def render_equity(report, algorithms):
             labels={"algoritmo": "Política", gap_col: "Brecha max–min"},
             title="Brecha descriptiva entre subgrupos",
         )
-        st.plotly_chart(chart_layout(fig_gap), use_container_width=True)
+        st.plotly_chart(chart_layout(fig_gap))
 
 
 def render_audit(report, algorithms):
@@ -240,7 +240,7 @@ def render_audit(report, algorithms):
     manifest = report["manifest"]
     if isinstance(manifest, pd.DataFrame) and not manifest.empty:
         st.subheader("Manifiesto")
-        st.dataframe(manifest, hide_index=True, use_container_width=True)
+        st.dataframe(manifest, hide_index=True)
     else:
         st.warning("No se encontró manifest.csv; las tablas se validaron por esquema, pero no por conteo declarado.")
 
@@ -254,7 +254,7 @@ def render_audit(report, algorithms):
         "Descargar CSV filtrado", table.to_csv(index=False).encode("utf-8"),
         file_name=f"{selected}_filtrado.csv", mime="text/csv", type="primary",
     )
-    st.dataframe(table.head(500), hide_index=True, use_container_width=True)
+    st.dataframe(table.head(500), hide_index=True)
     if len(table) > 500:
         st.caption(f"Vista limitada a 500 de {len(table):,} filas; la descarga contiene todas las filas filtradas.")
 
@@ -270,7 +270,7 @@ def render_pida(report, algorithms):
     c1.metric("Cumple", int(estados.get("Cumple", 0)))
     c2.metric("No cumple", int(estados.get("No cumple", 0)))
     c3.metric("Reportado", int(estados.get("Reportado", 0)))
-    st.dataframe(criterios, hide_index=True, use_container_width=True)
+    st.dataframe(criterios, hide_index=True)
     st.caption(
         "Las metas de mejora (≥ 10 %) y de robustez (≥ 80 % de escenarios) son aspiracionales; "
         "si no se alcanzan, el resultado se documenta junto con el análisis de sensibilidad."
@@ -287,7 +287,7 @@ def render_pida(report, algorithms):
                 labels={"media": "Recompensa acumulada media (IC95)", "algoritmo": "Política"},
                 title=f"Escenario base · {int(rec['n_episodios'].min())} episodios por política",
             )
-            st.plotly_chart(chart_layout(fig), use_container_width=True)
+            st.plotly_chart(chart_layout(fig))
 
     robustez = report.get("robustez_escenarios")
     if isinstance(robustez, pd.DataFrame) and not robustez.empty:
@@ -297,19 +297,19 @@ def render_pida(report, algorithms):
             color="tipo_escenario", orientation="h",
             labels={"mejora_pct": "Mejor RL frente a mejor referencia (%)", "escenario": "Escenario"},
         )
-        st.plotly_chart(chart_layout(fig), use_container_width=True)
-        st.dataframe(robustez, hide_index=True, use_container_width=True)
+        st.plotly_chart(chart_layout(fig))
+        st.dataframe(robustez, hide_index=True)
 
     brechas = report.get("brechas_subgrupos_pida")
     if isinstance(brechas, pd.DataFrame) and not brechas.empty:
         st.subheader("Brechas de cobertura por subgrupo (escenario base)")
         b = filter_algorithms(brechas[brechas["escenario"] == "base"], algorithms)
-        st.dataframe(b, hide_index=True, use_container_width=True)
+        st.dataframe(b, hide_index=True)
 
     dic = report.get("verificacion_diccionario")
     if isinstance(dic, pd.DataFrame) and not dic.empty:
         st.subheader("Verificación del diccionario de datos")
-        st.dataframe(dic, hide_index=True, use_container_width=True)
+        st.dataframe(dic, hide_index=True)
 
 
 def main():
