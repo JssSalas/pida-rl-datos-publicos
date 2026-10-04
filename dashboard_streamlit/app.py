@@ -3,13 +3,17 @@
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
 
 import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-from data_loader import DashboardDataError, filter_algorithms, load_integral_report
+# Garantiza que data_loader se encuentre con cualquier directorio de trabajo (Streamlit Cloud, AppTest).
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from data_loader import DashboardDataError, filter_algorithms, load_integral_report  # noqa: E402
 
 
 st.set_page_config(
