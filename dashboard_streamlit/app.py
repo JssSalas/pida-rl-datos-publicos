@@ -64,8 +64,21 @@ st.markdown(
 )
 
 
+def firma_datos(path: str) -> str:
+    """Firma de los CSV del directorio (nombre, tamaño y fecha) para invalidar la caché al actualizar datos."""
+    from pathlib import Path
+
+    carpeta = Path(path)
+    if not carpeta.is_dir():
+        return ""
+    return "|".join(
+        f"{p.name}:{p.stat().st_size}:{p.stat().st_mtime_ns}" for p in sorted(carpeta.glob("*.csv"))
+    )
+
+
 @st.cache_data(show_spinner=False)
-def load_cached(path: str):
+def load_cached(path: str, firma: str = ""):
+    """La firma forma parte de la clave: si cambian los CSV, se vuelven a leer sin reiniciar la app."""
     return load_integral_report(path)
 
 
@@ -320,7 +333,7 @@ def main():
     st.sidebar.title("PIDA-RL")
     data_dir = st.sidebar.text_input("Directorio de resultados V2", value=DEFAULT_DATA_DIR)
     try:
-        report = load_cached(data_dir)
+        report = load_cached(data_dir, firma_datos(data_dir))
     except DashboardDataError as exc:
         st.title("Dashboard PIDA-RL")
         st.error(str(exc))
