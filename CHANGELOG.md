@@ -12,6 +12,7 @@ Los cambios relevantes del proyecto se documentan en este archivo.
 - Notebooks: rama por defecto `main`; constantes `DESCUENTO` y `ORDEN_ALEATORIO` en 06–08; la sección 12 del notebook 10 compara el descuento mensual con el descuento por decisión.
 - Resultados de la ejecución completa en `dashboard_data/v2/` y `docs/CUMPLIMIENTO_PIDA.md`: DQN +3.9 % sobre Reglas simples, 7 de 9 criterios cumplidos; la meta aspiracional (+10 %) no se alcanza.
 - 10 pruebas nuevas (58 en total).
+- Dashboard: la caché de datos incluye una firma de los CSV, para que la app publicada muestre los datos nuevos sin reiniciarla.
 
 ### V2.15.0 — Publicación del dashboard
 
