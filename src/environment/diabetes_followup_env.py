@@ -16,9 +16,16 @@ class DiabetesFollowUpEnv(gym.Env):
     el entorno ejecuta la acción más intensa que no supere la propuesta y que sea
     viable con los recursos restantes. Es un simulador metodológico, no un sistema
     de recomendación clínica individual.
+
+    Desde V2.16 el orden en que se atiende a los perfiles se baraja al inicio de
+    cada mes (``orden_aleatorio=True``) con un generador propio derivado de la
+    semilla. Con el orden fijo del archivo, que está agrupado por entidad, la
+    capacidad se agotaba siempre en las mismas entidades. ``info["fin_mes"]``
+    indica que la decisión cerró el mes, para aplicar el descuento mensual.
     """
 
     metadata = {"render_modes": []}
+    VERSION = "2.16"  # orden de atención aleatorio por mes e info["fin_mes"]
     RIESGO_ORDINAL = {"bajo": 0, "medio": 1, "alto": 2}
     COLUMNAS_REQUERIDAS = [
         "edad",
@@ -51,6 +58,7 @@ class DiabetesFollowUpEnv(gym.Env):
         costos_accion=None,
         horizonte=12,
         seed=None,
+        orden_aleatorio=True,
     ):
         super().__init__()
         if len(cohorte_df) == 0:
@@ -85,8 +93,12 @@ class DiabetesFollowUpEnv(gym.Env):
         self.capacidad_mensual = self._normalizar_capacidad(capacidad_mensual)
         self.horizonte = int(horizonte)
         self.costo_accion = self._validar_costos(costos_accion or DEFAULT_ACTION_COSTS)
+        self.orden_aleatorio = bool(orden_aleatorio)
         self._rng = np.random.default_rng(seed)
         self._policy_rng = np.random.default_rng(None if seed is None else int(seed) + 1)
+        self._order_rng = np.random.default_rng(None if seed is None else int(seed) + 2)
+        self._orden = np.arange(self.n_perfiles)
+        self._pos = 0
 
         # Nueve variables de perfil, riesgo, historial, tiempo y recursos.
         self.observation_space = spaces.Box(
@@ -156,6 +168,7 @@ class DiabetesFollowUpEnv(gym.Env):
         if seed is not None:
             self._rng = np.random.default_rng(seed)
             self._policy_rng = np.random.default_rng(int(seed) + 1)
+            self._order_rng = np.random.default_rng(int(seed) + 2)
 
         self._meses_sin_contacto = np.zeros(self.n_perfiles, dtype=np.int64)
         self._cohorte_df = None
@@ -163,7 +176,7 @@ class DiabetesFollowUpEnv(gym.Env):
         self.mes_actual = 1
         self.presupuesto_mensual = self.capacidad_mensual
         self.recursos_usados_mes = 0
-        self.idx_actual = 0
+        self._nuevo_orden()
 
         return self._get_obs(self.idx_actual), {
             "mes": self.mes_actual,
@@ -171,6 +184,15 @@ class DiabetesFollowUpEnv(gym.Env):
             "capacidad_mensual": self.presupuesto_mensual,
             "recursos_restantes": self.recursos_restantes,
         }
+
+    def _nuevo_orden(self):
+        """Fija el orden de atención del mes y apunta al primer perfil."""
+        if self.orden_aleatorio:
+            self._orden = self._order_rng.permutation(self.n_perfiles)
+        else:
+            self._orden = np.arange(self.n_perfiles)
+        self._pos = 0
+        self.idx_actual = int(self._orden[0])
 
     def _get_obs(self, idx):
         row = self.perfil(idx)
@@ -259,16 +281,21 @@ class DiabetesFollowUpEnv(gym.Env):
             self._meses_sin_contacto[indice_decision] = 0
         self._cohorte_sincronizada = False
 
-        self.idx_actual += 1
+        self._pos += 1
         terminated = False
         truncated = False
-        if self.idx_actual >= self.n_perfiles:
-            self.idx_actual = 0
+        fin_mes = self._pos >= self.n_perfiles
+        if fin_mes:
             self.mes_actual += 1
             if self.mes_actual > self.horizonte:
                 terminated = True
+                self._pos = 0
+                self.idx_actual = int(self._orden[0])
             else:
                 self.recursos_usados_mes = 0
+                self._nuevo_orden()
+        else:
+            self.idx_actual = int(self._orden[self._pos])
 
         obs = (
             self._get_obs(self.idx_actual)
@@ -300,5 +327,7 @@ class DiabetesFollowUpEnv(gym.Env):
             "evento_adverso": evento_adverso,
             "prob_evento": prob_evento,
             "excede_capacidad": False,
+            "fin_mes": bool(fin_mes),
+            "posicion_en_mes": int(self._pos - 1 if not fin_mes else self.n_perfiles - 1),
         }
         return obs, reward, terminated, truncated, info

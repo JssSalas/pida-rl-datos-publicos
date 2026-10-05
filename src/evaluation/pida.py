@@ -5,7 +5,7 @@ El módulo no modifica el entorno ni las políticas. Añade:
 - una evaluación ligera por episodio, para al menos 100 episodios sin guardar la traza completa;
 - intervalos de confianza al 95 % (aproximación normal y bootstrap percentil);
 - escenarios de robustez de capacidad, costos y transición;
-- brechas de cobertura por sexo y grupo de edad;
+- brechas de cobertura por sexo, grupo de edad y entidad federativa (si la cohorte trae ``entidad``);
 - una tabla de criterios con el umbral, el valor observado y si se cumple.
 
 Los resultados comparan políticas dentro de un simulador. No demuestran efectividad clínica.
@@ -89,13 +89,16 @@ def escenarios_pida(capacidad_base=DEFAULT_MONTHLY_CAPACITY):
 
 
 def grupos_por_perfil(cohorte):
-    """Asigna a cada perfil su sexo codificado y su grupo de edad, con los mismos cortes de integral.py."""
+    """Asigna a cada perfil su sexo codificado, grupo de edad (cortes de integral.py) y entidad federativa."""
     base = cohorte.reset_index(drop=True)
     sexo = base["sexo"].map({1: "sexo_1", 2: "sexo_2", "1": "sexo_1", "2": "sexo_2"})
     sexo = sexo.fillna("sexo_otro_no_especificado").astype(str).to_numpy()
     edad = pd.cut(base["edad"], bins=[-np.inf, 44, 64, np.inf], labels=list(GRUPOS_EDAD)).astype(str).to_numpy()
     riesgo = base["categoria_riesgo"].astype(str).to_numpy()
-    return {"grupo_sexo": sexo, "grupo_edad": edad, "categoria_riesgo": riesgo}
+    grupos = {"grupo_sexo": sexo, "grupo_edad": edad, "categoria_riesgo": riesgo}
+    if "entidad" in base.columns:
+        grupos["entidad_federativa"] = base["entidad"].map(lambda x: f"ent_{int(x):02d}").to_numpy()
+    return grupos
 
 
 def evaluar_episodios(env, politica, nombre, semillas, grupos, gamma=0.95):
@@ -260,9 +263,15 @@ def tabla_criterios(resumen_base, episodios_base, robustez, brechas_base, prueba
     rob = robustez[robustez["escenario"] != "base"]
     frac_rob = float(rob["rl_mejora"].mean()) if len(rob) else np.nan
     tipos = set(rob["tipo_escenario"]) if len(rob) else set()
-    b = brechas_base[brechas_base["dimension"].isin(["grupo_sexo", "grupo_edad"])]
+    dims_equidad = ["grupo_sexo", "grupo_edad", "entidad_federativa"]
+    b = brechas_base[brechas_base["dimension"].isin(dims_equidad)]
     brecha_max = float(b["brecha_pp"].max()) if len(b) else np.nan
     brecha_rl = float(b[b["algoritmo"] == mejor_rl]["brecha_pp"].max()) if len(b) else np.nan
+    nombres_dim = {"grupo_sexo": "sexo", "grupo_edad": "edad", "entidad_federativa": "entidad"}
+    por_dim = "; ".join(
+        f"{nombres_dim[d]} {b[b['dimension'] == d]['brecha_pp'].max():.2f} pp"
+        for d in dims_equidad if (b["dimension"] == d).any()
+    )
 
     def fila(dimension, indicador, umbral, valor, cumple, nota=""):
         estado = "Cumple" if cumple is True else ("No cumple" if cumple is False else "Reportado")
@@ -294,9 +303,11 @@ def tabla_criterios(resumen_base, episodios_base, robustez, brechas_base, prueba
              f"{len(rob)} escenarios ({', '.join(sorted(tipos))}); el RL mejora en {100 * frac_rob:.0f} %",
              bool(frac_rob >= META_ROBUSTEZ) if len(rob) else None,
              "Reportados en todos los escenarios." if {"capacidad", "costos", "transicion"} <= tipos else "Faltan dimensiones."),
-        fila("Equidad operativa", "Diferencia de cobertura entre subgrupos de sexo y edad", "Reportada; meta ≤ 10 pp",
-             f"Máxima entre políticas: {brecha_max:.2f} pp; {mejor_rl}: {brecha_rl:.2f} pp",
-             bool(brecha_max <= UMBRAL_BRECHA_PP)),
+        fila("Equidad operativa", "Diferencia de cobertura entre subgrupos de sexo, edad y entidad federativa",
+             "Reportada; meta ≤ 10 pp",
+             f"Máxima entre políticas: {brecha_max:.2f} pp ({por_dim}); {mejor_rl}: {brecha_rl:.2f} pp",
+             bool(brecha_max <= UMBRAL_BRECHA_PP),
+             "" if (b["dimension"] == "entidad_federativa").any() else "La cohorte no incluye entidad."),
         fila("Reproducibilidad", "Código, semillas, configuración y resultados versionados", "Ejecutable desde cero en Colab",
              "Notebooks corregidos con PROJECT_ROOT; semillas y configuración en el manifiesto", None,
              "Se verifica al ejecutar los notebooks 00–10 en Colab."),
@@ -332,7 +343,7 @@ def evaluar_con_cache(escenario, cohorte, nombre, politica, semillas, directorio
     semillas = [int(s) for s in semillas]
     huella = huella_configuracion(
         pd.util.hash_pandas_object(cohorte.reset_index(drop=True), index=False).to_numpy().tobytes(),
-        escenario.__dict__, semillas, nombre, huella_politica, horizonte, gamma,
+        escenario.__dict__, semillas, nombre, huella_politica, horizonte, gamma, DiabetesFollowUpEnv.VERSION,
     )
     slug = "".join(ch if ch.isalnum() else "_" for ch in nombre.lower())
     ruta_ep = directorio / f"{escenario.nombre}__{slug}__{huella}_episodios.csv"

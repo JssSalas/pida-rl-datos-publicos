@@ -73,7 +73,7 @@ def test_accion_fuera_de_rango_falla():
 
 
 def test_identificador_original_se_conserva():
-    env = DiabetesFollowUpEnv(cohorte(), capacidad_mensual=5, horizonte=1)
+    env = DiabetesFollowUpEnv(cohorte(), capacidad_mensual=5, horizonte=1, orden_aleatorio=False)
     env.reset(seed=1)
     _, _, _, _, info = env.step(0)
     assert info["perfil_id"] == "P000"

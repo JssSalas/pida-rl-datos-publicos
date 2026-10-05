@@ -162,3 +162,15 @@ Si la rama ya fue integrada, se deberá revertir el commit de fusión mediante `
 - El entorno V2 lee la cohorte con NumPy. La equivalencia se verificó paso a paso contra la versión anterior (observaciones, recompensas, `info` y tabla Q), sin cambios en el MDP.
 - Hallazgo documentado: γ se aplica por decisión (18 504 por episodio). Con γ = 0.95 el agente no percibe el costo de oportunidad de la capacidad. Con γ = 0.9995, Q-learning supera a Reglas simples (+1.4 %). Ver `docs/CUMPLIMIENTO_PIDA.md`.
 - Validación: 48 pruebas aprobadas y Ruff sin observaciones. Ejecución completa de 05–10 sin errores.
+
+### V2.16.0 — Descuento mensual, orden aleatorio y equidad por entidad
+
+**Rama:** `feature/descuento-mensual-orden-aleatorio` (pull request #3).
+
+- Corrige las dos fallas documentadas en V2.14/V2.15. Ambas correcciones se fijaron antes de ver resultados; las metas del PIDA no cambian.
+  - Descuento mensual (γ^t con t = mes, como en la Definición del PIDA) en Q-learning, DQN y PPO.
+  - Orden de atención barajado cada mes con un generador propio; el flujo de eventos no cambia.
+- La cohorte conserva `entidad` (ENSANUT) solo para medir equidad, y el criterio de equidad incluye la entidad federativa.
+- Resultado (100 episodios): DQN −17 827 frente a Reglas simples −18 552 (+3.9 %, IC disjuntos); cobertura de riesgo alto 8.07 % frente a 4.24 %; el RL mejora en 7 de 7 escenarios; brecha máxima 3.00 pp (entidad), antes 60–75 pp. La meta aspiracional de +10 % no se alcanza.
+- Validación: 58 pruebas aprobadas, Ruff sin observaciones y ejecución completa de 03 y 05–10 sin errores (unos 62 minutos).
+- Recuperación: `git revert` del commit de fusión; los modelos NPZ anteriores se cargan con `descuento="decision"`.

@@ -11,15 +11,15 @@ Reglas escalonadas,propuesta,0,Sin contacto,13896,25.03242542153048
 Reglas escalonadas,propuesta,1,Mensaje,11628,20.946822308690013
 Reglas escalonadas,propuesta,2,Llamada,21528,38.78080415045396
 Reglas escalonadas,propuesta,3,Teleorientación,8460,15.239948119325552
-Q-learning,propuesta,0,Sin contacto,22125,39.856247297881545
-Q-learning,propuesta,1,Mensaje,9129,16.445092952875054
-Q-learning,propuesta,2,Llamada,9111,16.412667531344574
-Q-learning,propuesta,3,Teleorientación,15147,27.28599221789883
-DQN,propuesta,0,Sin contacto,37005,66.66126242974492
-DQN,propuesta,1,Mensaje,1422,2.5616083009079116
-DQN,propuesta,2,Llamada,6384,11.50021616947687
-DQN,propuesta,3,Teleorientación,10701,19.2769130998703
-PPO,propuesta,0,Sin contacto,57,0.10268050151318635
+Q-learning,propuesta,0,Sin contacto,41792,75.28462314454532
+Q-learning,propuesta,1,Mensaje,6181,11.134529471105346
+Q-learning,propuesta,2,Llamada,3246,5.847384349329874
+Q-learning,propuesta,3,Teleorientación,4293,7.733463035019455
+DQN,propuesta,0,Sin contacto,9178,16.53336215593025
+DQN,propuesta,1,Mensaje,2507,4.5161406542729505
+DQN,propuesta,2,Llamada,43740,78.79377431906615
+DQN,propuesta,3,Teleorientación,87,0.15672287073065283
+PPO,propuesta,0,Sin contacto,0,0.0
 PPO,propuesta,1,Mensaje,0,0.0
 PPO,propuesta,2,Llamada,0,0.0
-PPO,propuesta,3,Teleorientación,55455,99.89731949848681
+PPO,propuesta,3,Teleorientación,55512,100.0

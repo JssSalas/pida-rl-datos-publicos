@@ -1,9 +1,9 @@
 escenario,tipo_escenario,mejor_agente_rl,recompensa_mejor_rl,mejor_referencia,recompensa_mejor_referencia,diferencia,mejora_relativa,rl_mejora
-base,base,Q-learning,-19097.25,Reglas simples,-18708.1,-389.15000000000146,-0.02080115030387915,False
-capacidad_alta,capacidad,Q-learning,-18450.75,Reglas simples,-17746.0,-704.75,-0.03971317479995492,False
-capacidad_baja,capacidad,DQN,-19869.25,Reglas simples,-19653.75,-215.5,-0.010964828595051835,False
-costos_altos,costos,DQN,-19529.0,Reglas simples,-19136.0,-393.0,-0.020537207357859532,False
-costos_bajos,costos,Q-learning,-18357.0,Reglas simples,-17902.5,-454.5,-0.025387515710096356,False
-efecto_contacto_menor,transicion,Q-learning,-19114.75,Reglas simples,-18727.75,-387.0,-0.020664521899320526,False
-riesgo_basal_mayor,transicion,Q-learning,-20608.25,Reglas simples,-20212.5,-395.75,-0.01957946815089672,False
-riesgo_basal_menor,transicion,Q-learning,-17524.75,Reglas simples,-17133.25,-391.5,-0.02285030569214831,False
+base,base,DQN,-17827.48,Reglas simples,-18552.14,724.6599999999999,0.03906072291390642,True
+capacidad_alta,capacidad,DQN,-16415.5,Reglas simples,-17508.9,1093.4000000000015,0.062448240609061755,True
+capacidad_baja,capacidad,DQN,-19220.65,Reglas simples,-19581.65,361.0,0.01843562723263872,True
+costos_altos,costos,DQN,-18039.45,Reglas simples,-18955.9,916.4500000000007,0.048346425123576335,True
+costos_bajos,costos,DQN,-17460.05,Reglas simples,-17835.75,375.7000000000007,0.021064435193361687,True
+efecto_contacto_menor,transicion,DQN,-17849.425,Reglas simples,-18592.025,742.6000000000022,0.03994185679074776,True
+riesgo_basal_mayor,transicion,DQN,-19328.425,Reglas simples,-20084.525,756.1000000000022,0.037645899019269916,True
+riesgo_basal_menor,transicion,DQN,-16298.425,Reglas simples,-17017.525,719.1000000000022,0.0422564385831666,True

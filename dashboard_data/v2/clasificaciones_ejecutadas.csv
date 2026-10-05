@@ -3,22 +3,22 @@ Aleatoria,ejecutada,0,Sin contacto,54310,97.83470240668684
 Aleatoria,ejecutada,1,Mensaje,406,0.7313733967430466
 Aleatoria,ejecutada,2,Llamada,393,0.7079550367488111
 Aleatoria,ejecutada,3,Teleorientación,403,0.7259691598212998
-Reglas simples,ejecutada,0,Sin contacto,54000,97.27626459143968
-Reglas simples,ejecutada,1,Mensaje,468,0.8430609597924773
-Reglas simples,ejecutada,2,Llamada,1044,1.880674448767834
+Reglas simples,ejecutada,0,Sin contacto,53740,96.80789739155497
+Reglas simples,ejecutada,1,Mensaje,858,1.5456117596195418
+Reglas simples,ejecutada,2,Llamada,914,1.646490848825479
 Reglas simples,ejecutada,3,Teleorientación,0,0.0
-Reglas escalonadas,ejecutada,0,Sin contacto,54432,98.0544747081712
-Reglas escalonadas,ejecutada,1,Mensaje,180,0.324254215304799
-Reglas escalonadas,ejecutada,2,Llamada,540,0.9727626459143969
-Reglas escalonadas,ejecutada,3,Teleorientación,360,0.648508430609598
-Q-learning,ejecutada,0,Sin contacto,54510,98.19498486813661
-Q-learning,ejecutada,1,Mensaje,264,0.4755728491137051
-Q-learning,ejecutada,2,Llamada,177,0.3188499783830523
-Q-learning,ejecutada,3,Teleorientación,561,1.0105923043666234
-DQN,ejecutada,0,Sin contacto,54630,98.41115434500648
-DQN,ejecutada,1,Mensaje,153,0.27561608300907914
-DQN,ejecutada,2,Llamada,99,0.17833981841763943
-DQN,ejecutada,3,Teleorientación,630,1.1348897535667963
+Reglas escalonadas,ejecutada,0,Sin contacto,54210,97.65456117596194
+Reglas escalonadas,ejecutada,1,Mensaje,392,0.7061536244415622
+Reglas escalonadas,ejecutada,2,Llamada,671,1.2087476581640004
+Reglas escalonadas,ejecutada,3,Teleorientación,239,0.4305375414324831
+Q-learning,ejecutada,0,Sin contacto,53961,97.20600951145698
+Q-learning,ejecutada,1,Mensaje,1114,2.0067733102752556
+Q-learning,ejecutada,2,Llamada,289,0.5206081567949272
+Q-learning,ejecutada,3,Teleorientación,148,0.2666090214728347
+DQN,ejecutada,0,Sin contacto,52810,95.13258394581352
+DQN,ejecutada,1,Mensaje,2253,4.0585819282317335
+DQN,ejecutada,2,Llamada,449,0.8088341259547485
+DQN,ejecutada,3,Teleorientación,0,0.0
 PPO,ejecutada,0,Sin contacto,54792,98.70298313878081
 PPO,ejecutada,1,Mensaje,0,0.0
 PPO,ejecutada,2,Llamada,0,0.0

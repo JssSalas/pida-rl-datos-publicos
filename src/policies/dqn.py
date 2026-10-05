@@ -5,6 +5,8 @@ from collections import deque
 import numpy as np
 import pandas as pd
 
+from src.policies.q_learning import DESCUENTOS, factor_descuento
+
 
 class ReplayBuffer:
     """Buffer circular preasignado para experiencias de aprendizaje."""
@@ -19,16 +21,18 @@ class ReplayBuffer:
         self.rewards = np.zeros(self.capacity, dtype=np.float32)
         self.next_states = np.zeros_like(self.states)
         self.dones = np.zeros(self.capacity, dtype=np.float32)
+        self.discounts = np.zeros(self.capacity, dtype=np.float32)
         self.size = 0
         self.position = 0
 
-    def add(self, state, action, reward, next_state, done):
+    def add(self, state, action, reward, next_state, done, discount=1.0):
         i = self.position
         self.states[i] = np.asarray(state, dtype=np.float32)
         self.actions[i] = int(action)
         self.rewards[i] = float(reward)
         self.next_states[i] = np.asarray(next_state, dtype=np.float32)
         self.dones[i] = float(bool(done))
+        self.discounts[i] = float(discount)
         self.position = (self.position + 1) % self.capacity
         self.size = min(self.size + 1, self.capacity)
 
@@ -38,7 +42,7 @@ class ReplayBuffer:
         idx = rng.choice(self.size, size=int(batch_size), replace=False)
         return (
             self.states[idx], self.actions[idx], self.rewards[idx],
-            self.next_states[idx], self.dones[idx],
+            self.next_states[idx], self.dones[idx], self.discounts[idx],
         )
 
     def __len__(self):
@@ -130,8 +134,10 @@ class DQNAgent:
         self, observation_dim=13, n_actions=4, hidden_sizes=(64, 64), gamma=0.95,
         learning_rate=1e-3, epsilon=1.0, epsilon_min=0.05,
         epsilon_decay=0.99995, replay_capacity=50000, warmup_steps=1000,
-        target_update_frequency=500, seed=2026,
+        target_update_frequency=500, seed=2026, descuento="mensual",
     ):
+        if descuento not in DESCUENTOS:
+            raise ValueError("descuento debe ser 'mensual' o 'decision'.")
         if int(observation_dim) != 13 or int(n_actions) != 4:
             raise ValueError("DQN V2 requiere 13 observaciones y cuatro acciones.")
         if not 0 <= gamma <= 1 or not 0 < learning_rate:
@@ -144,6 +150,7 @@ class DQNAgent:
         self.n_actions = 4
         self.hidden_sizes = tuple(int(x) for x in hidden_sizes)
         self.gamma = float(gamma)
+        self.descuento = descuento
         self.learning_rate = float(learning_rate)
         self.epsilon = float(epsilon)
         self.epsilon_min = float(epsilon_min)
@@ -165,17 +172,18 @@ class DQNAgent:
         mejores = np.flatnonzero(q == q.max())
         return int(self.rng_action.choice(mejores))
 
-    def recordar(self, state, action, reward, next_state, done):
-        self.replay.add(state, action, reward, next_state, done)
+    def recordar(self, state, action, reward, next_state, done, fin_mes=True):
+        g = factor_descuento(self.gamma, self.descuento, fin_mes)
+        self.replay.add(state, action, reward, next_state, done, g)
 
     def aprender(self, batch_size=64):
         minimo = max(int(batch_size), self.warmup_steps)
         if len(self.replay) < minimo:
             return None
-        states, actions, rewards, next_states, dones = self.replay.sample(batch_size, self.rng_replay)
+        states, actions, rewards, next_states, dones, discounts = self.replay.sample(batch_size, self.rng_replay)
         targets = self.online.predict(states).copy()
         futuros = self.target.predict(next_states).max(axis=1)
-        objetivos = rewards + self.gamma * (1.0 - dones) * futuros
+        objetivos = rewards + discounts * (1.0 - dones) * futuros
         targets[np.arange(len(actions)), actions] = objetivos
         loss = self.online.train_batch(states, targets, self.learning_rate)
         self.gradient_steps += 1
@@ -196,6 +204,7 @@ class DQNAgent:
             "gamma": np.asarray(self.gamma), "learning_rate": np.asarray(self.learning_rate),
             "epsilon": np.asarray(self.epsilon), "epsilon_min": np.asarray(self.epsilon_min),
             "epsilon_decay": np.asarray(self.epsilon_decay),
+            "descuento": np.asarray(self.descuento),
         })
         np.savez_compressed(ruta, **datos)
 
@@ -207,6 +216,7 @@ class DQNAgent:
                 gamma=float(data["gamma"]), learning_rate=float(data["learning_rate"]),
                 epsilon=float(data["epsilon"]), epsilon_min=float(data["epsilon_min"]),
                 epsilon_decay=float(data["epsilon_decay"]), seed=seed,
+                descuento=str(data["descuento"]) if "descuento" in data.files else "decision",
             )
             for name in agent.online.params:
                 agent.online.params[name][...] = data[f"online_{name}"]
@@ -219,7 +229,7 @@ def entrenar_dqn(
     gamma=0.95, learning_rate=1e-3, epsilon=1.0, epsilon_min=0.05,
     epsilon_decay=0.99995, replay_capacity=50000, warmup_steps=1000,
     batch_size=64, train_frequency=4, target_update_frequency=500,
-    log_interval=1000,
+    log_interval=1000, descuento="mensual",
 ):
     """Entrena por pasos y registra ventanas auditables sin fabricar datos."""
     if min(int(pasos_totales), int(batch_size), int(train_frequency), int(log_interval)) < 1:
@@ -229,6 +239,7 @@ def entrenar_dqn(
         epsilon=epsilon, epsilon_min=epsilon_min, epsilon_decay=epsilon_decay,
         replay_capacity=replay_capacity, warmup_steps=warmup_steps,
         target_update_frequency=target_update_frequency, seed=semilla,
+        descuento=descuento,
     )
     env = env_factory()
     episode = 1
@@ -241,7 +252,7 @@ def entrenar_dqn(
         action = agent.seleccionar_accion(observation, explorar=True)
         next_observation, reward, terminated, truncated, info = env.step(action)
         done = bool(terminated or truncated)
-        agent.recordar(observation, action, reward, next_observation, done)
+        agent.recordar(observation, action, reward, next_observation, done, info.get("fin_mes", True))
         if step % int(train_frequency) == 0:
             loss = agent.aprender(batch_size)
             if loss is not None:

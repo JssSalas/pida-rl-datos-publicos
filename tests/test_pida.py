@@ -86,3 +86,12 @@ def test_protocolo_completo_sin_violaciones_y_con_tabla_de_criterios():
     assert criterios.loc[criterios["dimension"] == "Factibilidad operativa", "estado"].item() == "Cumple"
     assert clave["mejor_agente"] == "Agente prueba"
     assert (brechas["brecha_pp"] >= 0).all()
+
+
+def test_grupos_incluyen_entidad_si_existe():
+    from src.evaluation.pida import grupos_por_perfil
+    c = cohorte().assign(entidad=[1, 9, 32, 1, 9, 32][: len(cohorte())])
+    g = grupos_por_perfil(c)
+    assert "entidad_federativa" in g
+    assert set(g["entidad_federativa"]) <= {"ent_01", "ent_09", "ent_32"}
+    assert "entidad_federativa" not in grupos_por_perfil(cohorte())

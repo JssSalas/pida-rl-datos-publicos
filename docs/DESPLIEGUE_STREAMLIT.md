@@ -1,4 +1,6 @@
-# Despliegue del dashboard (V2.15.0)
+# Despliegue del dashboard (V2.16.0)
+
+Desde V2.16.0 `dashboard_data/v2/` contiene los resultados con descuento mensual y orden aleatorio; la tabla de brechas de la sección «Criterios PIDA» añade la dimensión `entidad_federativa`. La app pública se actualiza sola al fusionar en `main`.
 
 El repositorio publica dos aplicaciones Streamlit. Ambas se despliegan desde la rama `main` en Streamlit Community Cloud.
 
