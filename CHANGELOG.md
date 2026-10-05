@@ -4,6 +4,15 @@ Los cambios relevantes del proyecto se documentan en este archivo.
 
 ## [No publicado]
 
+### V2.16.0 — Descuento mensual, orden aleatorio y equidad por entidad
+
+- `DiabetesFollowUpEnv(orden_aleatorio=True)`: el orden de atención se baraja al inicio de cada mes (generador `semilla + 2`); nuevo `info["fin_mes"]`. Con el orden fijo del archivo, agrupado por entidad, la brecha territorial llegaba a 60–75 pp.
+- Descuento mensual (`descuento="mensual"`) en Q-learning, DQN y PPO, como en la Definición del PIDA (γ^t con t = mes). `"decision"` reproduce V2.15.
+- Notebook 03: la cohorte conserva `entidad`. El criterio de equidad del notebook 10 incluye la entidad federativa.
+- Notebooks: rama por defecto `main`; constantes `DESCUENTO` y `ORDEN_ALEATORIO` en 06–08; la sección 12 del notebook 10 compara el descuento mensual con el descuento por decisión.
+- Resultados de la ejecución completa en `dashboard_data/v2/` y `docs/CUMPLIMIENTO_PIDA.md`: DQN +3.9 % sobre Reglas simples, 7 de 9 criterios cumplidos; la meta aspiracional (+10 %) no se alcanza.
+- 10 pruebas nuevas (58 en total).
+
 ### V2.15.0 — Publicación del dashboard
 
 - Cuadernos `notebooks/despliegue/15_publicacion_streamlit_ngrok.ipynb` y `16_publicacion_streamlit_cloud.ipynb`: clonan `main`, verifican archivos y ausencia de identificadores, prueban las seis secciones y publican (ngrok con el secreto de Colab `NGROK_AUTHTOKEN`; Streamlit Cloud con la cuenta de GitHub).

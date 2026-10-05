@@ -59,19 +59,19 @@ def acciones_propuestas(env, politica):
 
 
 def test_reglas_asigna_clasificacion_por_riesgo():
-    env = DiabetesFollowUpEnv(cohorte(), capacidad_mensual=20, horizonte=1)
+    env = DiabetesFollowUpEnv(cohorte(), capacidad_mensual=20, horizonte=1, orden_aleatorio=False)
     assert acciones_propuestas(env, politica_por_reglas) == [0, 1, 2]
 
 
 def test_reglas_escalonadas_no_crea_cuarta_categoria():
     datos = cohorte_escalonada()
-    env = DiabetesFollowUpEnv(datos, capacidad_mensual=30, horizonte=1)
+    env = DiabetesFollowUpEnv(datos, capacidad_mensual=30, horizonte=1, orden_aleatorio=False)
     assert set(datos["categoria_riesgo"]) == {"bajo", "medio", "alto"}
     assert acciones_propuestas(env, politica_reglas_escalonadas) == [0, 1, 2, 2, 3]
 
 
 def test_umbral_teleorientacion_es_configurable():
-    env = DiabetesFollowUpEnv(cohorte_escalonada(), capacidad_mensual=30, horizonte=1)
+    env = DiabetesFollowUpEnv(cohorte_escalonada(), capacidad_mensual=30, horizonte=1, orden_aleatorio=False)
     politica_umbral_5 = crear_politica_reglas_escalonadas(5)
     assert acciones_propuestas(env, politica_umbral_5) == [0, 1, 2, 3, 3]
 

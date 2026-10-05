@@ -5,6 +5,20 @@ from collections import defaultdict
 import numpy as np
 import pandas as pd
 
+DESCUENTOS = ("mensual", "decision")
+
+
+def factor_descuento(gamma, descuento, fin_mes):
+    """Descuento aplicado a una transición.
+
+    ``mensual`` sigue la formulación del PIDA (γ^t con t = mes): las decisiones
+    dentro de un mes no se descuentan entre sí y γ se aplica al pasar de mes.
+    ``decision`` reproduce la versión anterior (γ en cada decisión).
+    """
+    if descuento == "decision":
+        return float(gamma)
+    return float(gamma) if fin_mes else 1.0
+
 
 class QLearningAgent:
     """Agente tabular epsilon-greedy con una representación compacta del estado."""
@@ -18,7 +32,10 @@ class QLearningAgent:
         epsilon_min=0.05,
         epsilon_decay=0.995,
         seed=2026,
+        descuento="mensual",
     ):
+        if descuento not in DESCUENTOS:
+            raise ValueError("descuento debe ser 'mensual' o 'decision'.")
         if int(n_actions) != 4:
             raise ValueError("El proyecto requiere exactamente cuatro acciones (0-3).")
         if not 0 < alpha <= 1:
@@ -33,6 +50,7 @@ class QLearningAgent:
         self.n_actions = int(n_actions)
         self.alpha = float(alpha)
         self.gamma = float(gamma)
+        self.descuento = descuento
         self.epsilon = float(epsilon)
         self.epsilon_min = float(epsilon_min)
         self.epsilon_decay = float(epsilon_decay)
@@ -70,12 +88,13 @@ class QLearningAgent:
         mejores = np.flatnonzero(valores == valores.max())
         return int(self.rng.choice(mejores))
 
-    def actualizar(self, observacion, accion, recompensa, siguiente_observacion, terminado):
+    def actualizar(self, observacion, accion, recompensa, siguiente_observacion, terminado, fin_mes=True):
         estado = self.discretizar(observacion)
         siguiente = self.discretizar(siguiente_observacion)
         objetivo = float(recompensa)
         if not terminado:
-            objetivo += self.gamma * float(self.q_table[siguiente].max())
+            g = factor_descuento(self.gamma, self.descuento, fin_mes)
+            objetivo += g * float(self.q_table[siguiente].max())
         error = objetivo - self.q_table[estado][int(accion)]
         self.q_table[estado][int(accion)] += self.alpha * error
 
@@ -99,6 +118,7 @@ class QLearningAgent:
             n_actions=self.n_actions,
             alpha=self.alpha,
             gamma=self.gamma,
+            descuento=self.descuento,
             epsilon=self.epsilon,
             epsilon_min=self.epsilon_min,
             epsilon_decay=self.epsilon_decay,
@@ -116,6 +136,7 @@ class QLearningAgent:
                 epsilon_min=float(datos["epsilon_min"]),
                 epsilon_decay=float(datos["epsilon_decay"]),
                 seed=seed,
+                descuento=str(datos["descuento"]) if "descuento" in datos.files else "decision",
             )
             for estado, valores in zip(datos["estados"], datos["valores"]):
                 agente.q_table[tuple(int(x) for x in estado)] = valores.astype(float)
@@ -148,6 +169,7 @@ def entrenar_q_learning(
     epsilon=1.0,
     epsilon_min=0.05,
     epsilon_decay=0.995,
+    descuento="mensual",
 ):
     """Entrena Q-learning y devuelve el agente junto con su historial auditable."""
     if int(episodios) < 1:
@@ -159,6 +181,7 @@ def entrenar_q_learning(
         epsilon_min=epsilon_min,
         epsilon_decay=epsilon_decay,
         seed=semilla,
+        descuento=descuento,
     )
     historial = []
 
@@ -175,7 +198,7 @@ def entrenar_q_learning(
             accion = agente.seleccionar_accion(observacion, explorar=True)
             siguiente, recompensa, terminado, truncado, info = env.step(accion)
             fin = bool(terminado or truncado)
-            agente.actualizar(observacion, accion, recompensa, siguiente, fin)
+            agente.actualizar(observacion, accion, recompensa, siguiente, fin, info.get("fin_mes", True))
             observacion = siguiente
             recompensa_total += float(recompensa)
             pasos += 1
