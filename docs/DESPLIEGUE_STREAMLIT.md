@@ -1,6 +1,6 @@
-# Despliegue del dashboard (V2.13.0)
+# Despliegue del dashboard (V2.15.0)
 
-El repositorio publica dos aplicaciones Streamlit. Ambas se pueden desplegar desde la misma rama en Streamlit Community Cloud.
+El repositorio publica dos aplicaciones Streamlit. Ambas se despliegan desde la rama `main` en Streamlit Community Cloud.
 
 | Aplicación | Main file path | Datos versionados | Origen de los datos |
 |---|---|---|---|
@@ -12,22 +12,31 @@ El repositorio publica dos aplicaciones Streamlit. Ambas se pueden desplegar des
 - `dashboard_data/v2/` contiene solo tablas agregadas y `manifest.csv`.
 - `detalle.csv`, que es la traza por perfil y mes, se excluye explícitamente en `.gitignore`.
 
+## Cuadernos de publicación (recomendados)
+
+| Cuaderno | Uso | Secretos |
+|---|---|---|
+| `notebooks/despliegue/15_publicacion_streamlit_ngrok.ipynb` | Vista temporal desde Colab con un túnel de ngrok | `NGROK_AUTHTOKEN` en los secretos de Colab |
+| `notebooks/despliegue/16_publicacion_streamlit_cloud.ipynb` | Verificación previa, valores del formulario y comprobación de la URL permanente | Ninguno |
+
+Ambos clonan `main`, instalan `dashboard_streamlit/requirements.txt`, verifican que no se publiquen microdatos ni identificadores y recorren las seis secciones del dashboard con `streamlit.testing` antes de publicar. No requieren Drive ni reentrenar: usan los resultados agregados de `dashboard_data/v2/`.
+
 ## Desplegar en Streamlit Community Cloud
 
 1. Entra a [share.streamlit.io](https://share.streamlit.io/) con la cuenta de GitHub `JssSalas`.
 2. Selecciona **Create app → Deploy a public app from GitHub**.
 3. Configura la aplicación:
    - **Repository:** `JssSalas/pida-rl-datos-publicos`
-   - **Branch:** `feature/entorno-capacidad-v2`. Usa `main` cuando el pull request #1 se haya integrado.
+   - **Branch:** `main`.
    - **Main file path:** `dashboard_streamlit/app.py`. Para la línea v1 usa `dashboard_streamlit_v1/app.py`.
    - **Python:** 3.12. En *Advanced settings* no se requieren secretos.
 4. Selecciona **Deploy**. Cada aplicación instala el `requirements.txt` de su carpeta (`streamlit`, `pandas` y `plotly`).
 
-Si ya existe una app desplegada desde `main` con `dashboard_streamlit/app.py`, seguirá mostrando la versión v1 hasta que se integre el PR. Después mostrará el dashboard V2, porque en esa ruta vivirá la aplicación V2 y sus datos en `dashboard_data/v2/`.
+El dashboard V2 requiere `streamlit>=1.50`; desde esa versión las tablas y gráficas ocupan el ancho completo sin el parámetro obsoleto `use_container_width`. Cada `git push` a `main` actualiza la app publicada.
 
 ## Vista temporal desde Colab (ngrok)
 
-Ejecuta los notebooks en `notebooks/corregidos/linea_v1_despliegue/` hasta el 13.
+Usa el cuaderno 15. La alternativa histórica es el notebook 13 de `notebooks/corregidos/linea_v1_despliegue/`:
 
 1. En **Secretos** de Colab, define `NGROK_AUTHTOKEN` con acceso habilitado para el notebook.
 2. `DASHBOARD_VERSION = 'v2'` es el valor por defecto. Para la línea v1, define `PIDA_DASHBOARD_VERSION=v1`.

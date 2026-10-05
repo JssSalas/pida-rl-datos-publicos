@@ -69,6 +69,7 @@ Consulta [`docs/VALIDACION_REPRODUCIBILIDAD.md`](docs/VALIDACION_REPRODUCIBILIDA
 
 - `notebooks/corregidos/`: versiones portables 00–09, con `PROJECT_ROOT` y modo prueba `PIDA_MODO_PRUEBA=1`.
 - `notebooks/corregidos/linea_v1_despliegue/`: línea v1 05–14, que incluye la generación del dashboard (12), el despliegue con ngrok y GitHub (13) y la documentación CRISP-DM (14).
+- `notebooks/despliegue/`: publicación del dashboard con ngrok (15) y en Streamlit Community Cloud (16).
 - Dashboard publicado:
   - `dashboard_streamlit/app.py` (V2), con datos en `dashboard_data/v2/`.
   - `dashboard_streamlit_v1/app.py` (línea v1).
@@ -84,7 +85,7 @@ Consulta [`docs/NOTEBOOKS_CORREGIDOS.md`](docs/NOTEBOOKS_CORREGIDOS.md) y [`docs
 | Preparación | Cohorte y validaciones | Implementada |
 | Modelación | Entorno, baselines, Q-learning, DQN y PPO | Implementada |
 | Evaluación | Semillas comunes, capacidad, sensibilidad y subgrupos | Implementada |
-| Despliegue | Dashboard, CI y documentación | En validación previa a fusión |
+| Despliegue | Dashboard, CI, cuadernos de publicación y documentación | Implementada; publicación en Streamlit Cloud pendiente de la cuenta del autor |
 
 La matriz detallada está en [`docs/CRISP_DM.md`](docs/CRISP_DM.md).
 

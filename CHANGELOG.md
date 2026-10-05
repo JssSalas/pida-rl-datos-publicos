@@ -4,6 +4,12 @@ Los cambios relevantes del proyecto se documentan en este archivo.
 
 ## [No publicado]
 
+### V2.15.0 — Publicación del dashboard
+
+- Cuadernos `notebooks/despliegue/15_publicacion_streamlit_ngrok.ipynb` y `16_publicacion_streamlit_cloud.ipynb`: clonan `main`, verifican archivos y ausencia de identificadores, prueban las seis secciones y publican (ngrok con el secreto de Colab `NGROK_AUTHTOKEN`; Streamlit Cloud con la cuenta de GitHub).
+- `dashboard_streamlit/app.py`: se retira `use_container_width` (obsoleto) y se agrega su carpeta a `sys.path` para importar `data_loader` con cualquier directorio de trabajo.
+- `streamlit>=1.50,<2.0` en `requirements.txt` y `dashboard_streamlit/requirements.txt`.
+
 ### Añadido
 
 - Configuración central para acciones, costos y capacidad mensual.
